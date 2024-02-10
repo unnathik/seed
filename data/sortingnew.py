@@ -4,16 +4,53 @@ import Levenshtein
 import re
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-#Removed duplicate years
-clean_envi_path = 'clean-environmental-dataset.csv'
-clean_envi_data = pd.read_csv(clean_envi_path)
-cleaneddf = clean_envi_data.drop_duplicates(keep = 'first')
-cleaneddf.to_csv('new_environmental_dataset1.csv')
+# clean_envi_path = 'clean-environmental-dataset.csv'
+# clean_envi_data = pd.read_csv(clean_envi_path)
+# cleaneddf = clean_envi_data.drop_duplicates(keep = 'first')
+# cleaneddf.to_csv('new_environmental_dataset1.csv')
 
 # Load the nasdaq dataset
-# nasdaq_df = pd.read_csv('nasdaq.csv')
+nasdaq_df = pd.read_csv('nasdaq.csv')
 
-# # Function to remove specified prefixes and suffixes
+original_data_path = 'cleaned_environmental_dataset_no_duplicates.csv'  # Update this path
+nasdaq_screener_path = 'nasdaq_cleaned.csv'  # Update this path
+
+original_data = pd.read_csv(original_data_path)
+nasdaq_data = pd.read_csv(nasdaq_screener_path)
+# Preprocess and standardize company names (optional, depends on your data)
+def standardize_name(name):
+    import re
+    suffixes = ['Common Stock', 'Warrant', 'Ordinary Shares', 'Depositary Shares', ' Inc', ' Corp', ' Company', ' Corporation', ' Ltd', ' Limited', ' Co', '\.', ',']
+    pattern = '|'.join(suffixes)
+    name = re.sub(pattern, '', name, flags=re.IGNORECASE).strip()
+    return name
+
+original_data['Standardized Company'] = original_data['Company_Name'].apply(standardize_name)
+nasdaq_data['Standardized Name'] = nasdaq_data['Company Name'].apply(standardize_name)
+
+# Create a mapping of standardized names to NASDAQ symbols
+name_to_symbol = pd.Series(nasdaq_data.Symbol.values, index=nasdaq_data['Standardized Name']).to_dict()
+
+# Define a function to perform fuzzy matching
+def find_best_match(name, choices, scorer=fuzz.WRatio, threshold=85):
+    best_match = process.extractOne(name, choices, scorer=scorer)
+    if best_match and best_match[1] >= threshold:
+        print(best_match[0])
+        return best_match[0]
+    else:
+        print("None")
+        return None
+
+# Apply fuzzy matching
+nasdaq_names = nasdaq_data['Standardized Name'].unique()
+original_data['Fuzzy Matched Name'] = original_data['Standardized Company'].apply(lambda x: find_best_match(x, nasdaq_names))
+original_data['Fuzzy Corrected Ticker'] = original_data['Fuzzy Matched Name'].map(name_to_symbol)
+
+
+# Save the updated dataset
+original_data.to_csv('save_updated_dataset.csv', index=False)  # Update the save path
+
+
 # def clean_name(name):
 #     suffixes = ['Corporation', 'Ordinary Shares', 'Common Stock', 'Depositary Shares', 'Common Shares']
 #     for suffix in suffixes:
@@ -25,16 +62,16 @@ cleaneddf.to_csv('new_environmental_dataset1.csv')
 # nasdaq_df['Updated_Names'] = nasdaq_df['Name'].apply(clean_name)
 
 # # Load the clean environmental dataset
-# env_df = pd.read_csv('new_environmental_dataset.csv')
+# env_df = pd.read_csv('cleaned_environmental_dataset_no_duplicates.csv')
 
-# # Define a function for fuzzy matching
+# # Define a function for fuzzy matching using the correct scorer
 # def get_best_match(row, choices, limit=1):
 #     best_matches = process.extract(row, choices, scorer=fuzz.WRatio, limit=limit)
 #     # Assuming the best match is returned first
-#     if (best_matches[0][0] != None):
+#     if best_matches:
 #         print(best_matches[0][0])
 #     else:
-#         print(None)
+#         print("none")
 #     return best_matches[0][0] if best_matches else None
 
 # # Apply fuzzy matching to find the best match in env_df for each entry in nasdaq_df
@@ -42,4 +79,5 @@ cleaneddf.to_csv('new_environmental_dataset1.csv')
 
 # # Now merge the datasets based on the best match found
 # merged_df = pd.merge(nasdaq_df, env_df, left_on='Best_Match', right_on='Company_Name', how='left')
-# merged_df.to_csv('ticker_environmental_dataset.csv')
+
+# merged_df.to_csv('ticker_environmental.csv')
