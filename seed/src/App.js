@@ -1,20 +1,28 @@
 import './App.css';
+import React from 'react';
 import LoginPage from './Login/LoginPage';
-import { BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
-import Layout from './Layout';
 import Dashboard from './Dashboard/Dashboard';
+import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { AnimatePresence } from 'framer-motion';
+
+function AppWithLayout() {
+  const location = useLocation(); // Use location here for keying transitions
+
+  return (
+    <AnimatePresence mode='wait'>
+      <Routes location={location} key={location.pathname}>
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+      </Routes>
+    </AnimatePresence>
+  );
+}
 
 function App() {
   return (
     <Router>
-    <Layout>
-        <Routes>
-            <Route path="/" element={<LoginPage />} />
-            <Route path="/dashboard" element={<Dashboard />} />
-        </Routes>
-    </Layout>
-</Router>
+      <AppWithLayout /> {/* Wrap the Routes and AnimatePresence in a component that has access to the location */}
+    </Router>
   );
 }
 
