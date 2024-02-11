@@ -25,7 +25,7 @@ function Dashboard() {
     const [searchTerm, setSearchTerm] = useState('');
 
     //For initial Modal
-    const [modalOpen, setModalOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(true);
     const [canCloseModal, setCanCloseModal] = useState(false);
     
     const [experience, setExperience] = useState(0);
@@ -145,11 +145,11 @@ function Dashboard() {
             <div className="w-full">
                 <AppNavbar />
             </div>
-            <div className='flex flex-row items-center justify-center p-4 h-full'>
-            <div className='flex flex-col h-full w-3/4 bg-black'></div>
-            <div className='flex flex-col h-full w-1/4 pl-4'>
-                <NewsFeed />
-            </div>
+            <div className='flex flex-row items-center justify-center h-full overflow-x-hidden p-4'>
+                <div className='flex flex-col h-full w-3/4 overflow-hidden'></div>
+                <div className='flex flex-col h-full w-1/4 overflow-auto'>
+                    <NewsFeed />
+                </div>
             </div>
         </div>
         </motion.div>
