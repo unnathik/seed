@@ -12,7 +12,7 @@ openai.api_key = "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"
 
 app = Flask(__name__)
 
-app.config["SECRET_KEY"] = "test"  # Change this to a random secret key
+app.config["SECRET_KEY"] = "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"  # Change this to a random secret key
 app.config["SESSION_TYPE"] = "filesystem"  # Can be "redis", "memcached", "filesystem", etc.
 Session(app)
 
@@ -22,7 +22,6 @@ CORS(app)
 
 
 @app.route('/stock', methods=['GET'])
-@cross_origin
 def get_stock_info():
     # Get ticker symbol from query parameter
     ticker_symbol = request.args.get('ticker', '').upper()
@@ -97,7 +96,6 @@ def get_stock_info():
 
 
 @app.route('/func', methods=['GET'])
-@cross_origin
 def runbackend():
     cntxt = request.args.get('cntxt', "I am interested in solar energy")
     new = request.args.get('new', "true")
@@ -150,8 +148,6 @@ def runbackend():
 
 
     return jsonify(ai_message)
-
-
 
 
 if __name__ == '__main__':
