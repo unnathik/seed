@@ -15,15 +15,22 @@ st.write("Authors: Unnathi U Kumar, Adhira Choudhury, Abhishek Pillai, Neil Goya
 st.write("")
 
 st.header("Introduction")
-st.write("text about the problem here")
+st.write("[TODO: add details]")
 
-st.header("More About Our Data")
-st.write("text about data here")
-st.write("normalisation, fuzzy matching")
+st.header("More About Our Dataset")
+st.write("We used the [HBS Corporate Environmental Impact dataset](https://opennetzero.org/dataset/iwa-corporate-environmental-impact-data-supplement) and the [As You Sow Invest Your Values Company Screen dataset](https://www.asyousow.org/) in our study.")
+st.write("The HBS dataset contains historical (2010-2019) sustainability data for 1665 companies globally. It reports the firm's industry, performance on several environmental factors (working capacity, fish production capacity, crop production capacity, meat production capacity, biodiversity, abiotic resources, water production capacity, wood production capacity), and performance on 17 environment-focused UN Sustainable Development Goals (SDG) targets. The dataset also reports “% imputed”, quantifying a company's environmental impact.")
+st.write("The As You Sow dataset reports on screening criteria focused on environmental, social, and governance (ESG) aspects, including involvement in fossil fuels, coal mining, controversial weapons, and tobacco, among others, for 6557 companies globally. It provides “Yes” or “No” (binary) answers to questions like whether the company was identified in a coal screen, a controversial weapons screen, a gun retailers screen, a gender equality screen, etc. The dataset also provides corresponding tickers with the company name to facilitate identification on the stock exchange.")
+
+# Data Preprocessing
+st.header("Data Preprocessing")
+st.write("To ensure that this dataset fit our needs, we went through several stages of preprocessing. First, since our project focuses on the US Stock Market, we omitted all companies outside of the US from the dataset. This resulted in 245 companies present in the US in the dataset. Then, since our project does not have a focus on historical performance, we only retained dataset entries from 2019 and removed the “Year” column. We also removed columns that were irrelevant to the task of evaluating environmental impact, which included the production capacities and individual environmental intensities. Then, we normalised the dataset so that all relevant factors in the dataset would be represented as comparable indices. Since some dataset entires were negative, we normalised the dataset by adding the absolute value of the minimum value entry to all entries in the column and dividing by the maximum value entry in the column. Further, since the company names in the HBS dataset did not have corresponding tickers, we performed fuzzy matching of the company names against companies in the NASDAQ dataset. Fuzzy matching comprised [TODO: add details]. To be able to run a clustering algorithm on the data, we performed multi-hot encoding on the company name and industries.")
+st.write("For the As Your Sow dataset, [TODO: add details].")
+st.write("To combine them, [TODO: add details].")
 
 # SDG Analysis
-st.header("Preliminary Analysis on SDG (Sustainable Development Goals) Performance")
-st.write("First, we conducted an analysis on the relationships between the different SDG metrics.")
+st.header("Analysis on SDG (Sustainable Development Goals) Performance")
+st.write("First, we conducted an analysis on the relationships between the different SDG metrics from the HBS dataset.")
 data = pd.read_csv(clean_environmental_dataset)
 
 sdg_columns = [col for col in data.columns if col.startswith('SDG')]
@@ -33,7 +40,9 @@ fig = plt.figure(figsize=(12, 10))
 sns.heatmap(correlation_matrix, annot=True, cmap='coolwarm', fmt=".2f")
 plt.title('Correlation between Different SDG Metrics')
 st.pyplot(fig)
-st.write("We found that...")
+st.write('The heatmap above provides some interesting insights. We find that there are a variety of relations within SDG performance, ranging from strongly positively correlated to strongly negatively correlated. For example, SDG 1.5 has a very high correlation with SDG 2.1, 2.2, 2.3, and 2.4 (all 0.99), which means that companies focusing on building resilience to disasters (SDG 1.5) also have a strong focus on eliminating hunger (since SDG 2 is “zero hunger”).')
+st.write('On the contrary, we also find that SDG 14.1 has a strong negative correlation with SDG 3.4 (-0.96) and SDG 3.3 (-0.96), which means that companies focusing on reducing marine pollution (SDG 14.1), generally, do not fight diseases and promote mental health (SDGs 3.3 and 3.4). While this correlation seems unexpected, it is an observed tradeoff that companies should be mindful of and work towards mitigating. SDG 15.1 and SDG 15.2 are perfectly negatively correlated with SDG 14.1 and SDG 14.c, which suggests a tradeoff between conserving life on land versus life on water for companies.')
+st.write('Some moderate correlations are also present in the heatmap. For example, SDG 3.4 shows very little to no linear correlation with SDG 6 (-0.09). so companies focusing on reducing mortality from non-communicable diseases are not necessarily focused on clean water and sanitation.')
 
 # Industry Analysis
 st.header("Industry Analysis")
