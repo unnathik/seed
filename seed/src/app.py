@@ -5,8 +5,12 @@ import urllib.request
 import pandas as pd
 import json
 from bs4 import BeautifulSoup
+from flask_cors import CORS
 
 app = Flask(__name__)
+
+# Enable CORS for all domains on all routes. For production, specify the domain of your frontend.
+CORS(app)
 
 
 @app.route('/stock', methods=['GET'])
@@ -54,12 +58,12 @@ def get_stock_info():
             "fiftyDayAverage": stock_info.get("fiftyDayAverage"),
             "twoHundredDayAverage": stock_info.get("twoHundredDayAverage"),
             "news": stock.news[0:2],
-            "day5": float(hist[-1:]['Close']),
-            "day4": float(hist[-2:-1]['Close']),
-            "day3": float(hist[-3:-2]['Close']),
-            "day2": float(hist[-4:-3]['Close']),
-            "day1": float(hist[-5:-4]['Close']),
-            "day0": float(hist[-6:-5]['Close']),
+            "day5": float(hist.iloc[-1]['Close']),
+            "day4": float(hist.iloc[-2:-1]['Close']),
+            "day3": float(hist.iloc[-3:-2]['Close']),
+            "day2": float(hist.iloc[-4:-3]['Close']),
+            "day1": float(hist.iloc[-5:-4]['Close']),
+            "day0": float(hist.iloc[-6:-5]['Close']),
             "esg": float(Formatdata_2.iloc[-1]["esgScore"]),
             "gs": float(Formatdata_2.iloc[-1]["governanceScore"]),
             "es": float(Formatdata_2.iloc[-1]["environmentScore"]),
