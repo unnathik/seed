@@ -75,7 +75,7 @@ function Dashboard() {
 
             setData(tickers)
             setPercentages(percentages)
-            prevObjects.push(portfolio)
+            prevObjects.push(a.portfolio)
             setPrevObjects(prevObjects)
             
             return {
@@ -96,7 +96,7 @@ function Dashboard() {
     const [searchTerm, setSearchTerm] = useState('');
 
     //For initial Modal
-    const [modalOpen, setModalOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(true);
     const [canCloseModal, setCanCloseModal] = useState(false);
     
     const [experience, setExperience] = useState(0);
@@ -463,8 +463,8 @@ function Dashboard() {
                             </div>
 
                             {/* Text Input - Ensure it's at the bottom */}
-                            <div className='w-full mt-5 flex flex-row items-center'>
-                            <form className="w-full flex h-full">
+                            <div className='w-full mt-5 flex flex-row items-end h-full'>
+                            <form className="w-full flex h-full items-end">
                                 <input
                                     type="text"
                                     value={textInput}
@@ -479,9 +479,9 @@ function Dashboard() {
                                         followUpAPI(textInput); 
                                         setTextInput("");
                                     }} 
-                            className='text-sm bg-[#00BF63] hover:opacity-[0.8] text-white font-md py-2 px-4 rounded-full w-1/4 ml-5'
+                            className='text-sm bg-[#00BF63] hover:opacity-[0.8] text-white font-md py-2 px-4 rounded-full w-1/4 ml-5 h-11' 
                         >
-                            'Proceed' 
+                            'Proceed'
                         </button>                                
                         </form>
                     </div>
