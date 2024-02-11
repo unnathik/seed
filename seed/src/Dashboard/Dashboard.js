@@ -6,7 +6,7 @@ import Modal from './Modal';
 import leaves from '../art_assets/leaves.png';
 import icon from '../art_assets/seed_logo.png';
 import SDGSelector from './SDGSelector';
-
+import NewsFeed from './Newsfeed';
 
 const pageVariants = {
     initial: { opacity: 0 },
@@ -22,7 +22,6 @@ const pageTransition = {
 
 
 function Dashboard() {
-
     const [searchTerm, setSearchTerm] = useState('');
 
     //For initial Modal
@@ -51,7 +50,6 @@ function Dashboard() {
         const isEligibleToClose = amount >= 10 && experience > 0;
         setCanCloseModal(isEligibleToClose);
     }, [amount, experience]); 
-
     return (
         <motion.div
             initial="initial"
@@ -158,6 +156,9 @@ function Dashboard() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
+            <div className='flex flex-col h-full w-3/4 bg-black'></div>
+            <div className='flex flex-col h-full w-1/4 pl-4'>
+                <NewsFeed />
             </div>
             </div>
         </div>
