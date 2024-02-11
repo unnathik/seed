@@ -11,7 +11,7 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 clean_environmental_dataset = '../data/cleaned_environmental_dataset_no_duplicates.csv'
 st.image("seed_logo.png", width=100)
 st.title("Seed: Socially Responsible Investing")
-st.write("Authors: Unnathi U Kumar, Adhira Choudhury, Abhishek Pillai, Neil Goyal")
+st.write("Authors: Unnathi Kumar, Adhira Choudhury, Abhishek Pillai, Neil Goyal")
 st.write("")
 
 st.header("Introduction")
@@ -24,9 +24,9 @@ st.write("The As You Sow dataset reports on screening criteria focused on enviro
 
 # Data Preprocessing
 st.header("Data Preprocessing")
-st.write("To ensure that this dataset fit our needs, we went through several stages of preprocessing. First, since our project focuses on the US Stock Market, we omitted all companies outside of the US from the dataset. This resulted in 245 companies present in the US in the dataset. Then, since our project does not have a focus on historical performance, we only retained dataset entries from 2019 and removed the “Year” column. We also removed columns that were irrelevant to the task of evaluating environmental impact, which included the production capacities and individual environmental intensities. Then, we normalised the dataset so that all relevant factors in the dataset would be represented as comparable indices. Since some dataset entires were negative, we normalised the dataset by adding the absolute value of the minimum value entry to all entries in the column and dividing by the maximum value entry in the column. Further, since the company names in the HBS dataset did not have corresponding tickers, we performed fuzzy matching of the company names against companies in the NASDAQ dataset. Fuzzy matching comprised [TODO: add details]. To be able to run a clustering algorithm on the data, we performed multi-hot encoding on the company name and industries.")
-st.write("For the As Your Sow dataset, [TODO: add details].")
-st.write("To combine them, [TODO: add details].")
+st.write("To ensure that this dataset fit our needs, we went through several stages of preprocessing. First, since our project focuses on the US Stock Market, we omitted all companies outside of the US from the dataset. This resulted in 245 companies present in the US in the dataset. Then, since our project does not have a focus on historical performance, we only retained dataset entries from 2019 and removed the “Year” column. We also removed columns that were irrelevant to the task of evaluating environmental impact, which included the production capacities and individual environmental intensities. Then, we normalised the dataset so that all relevant factors in the dataset would be represented as comparable indices. Since some dataset entires were negative, we normalised the dataset by adding the absolute value of the minimum value entry to all entries in the column and dividing by the maximum value entry in the column. Further, since the company names in the HBS dataset did not have corresponding tickers, we performed fuzzy matching of the company names against companies in the NASDAQ dataset to account for minor differences in names and abbreviations. Fuzzy matching leveraged Levenshtein distance, which involved calculating similarity scores between names and selecting the closest matches based on a 0.85 threshold. To be able to run a clustering algorithm on the data, we performed multi-hot encoding on the company name and industries.")
+st.write("The As Your Sow dataset was pruned to 1,678 US entries from an initial 6,377 by ommiting all entries with Non United States stock data to remain consistent with the U.S. stock market. The financial metrics of beta and market cap were appended to each entry through Yahoo Finance API calls. Fuzzy matching, using Levenshtein distance, resolved discrepancies in the Tickers column which provided a list of tickers rather than the one used in the US market by matching company names from the dataset and NASDAQ dataset to get the correct ticker for each entry. Additionally, the dataset contains 32 attributes which provide insights into the ESG status of the stock's company. For instance, attributes include details like identifying companies use of fossil fuels, support of deforestation, production of certain products, and support of certain laws and policies.")
+st.write("Combining these datasets entailed matching entities by ticker values, appending entries absent in one dataset with zero values for missing metrics, and applying hot encoding to both industry and company names, facilitating subsequent analytical endeavors. This process underscored the datasets' readiness for environmental impact analysis within the US stock market context, leveraging pandas for data manipulation and CSV files for intermediate storage.  Incorporating the provided details into the analytical framework, the preprocessing and integration of the HBS Corporate Environmental Impact and As Your Sow datasets resulted in a comprehensive dataset with 1,824 entries, representing companies, and 62 attributes, covering a wide range of ESG indicators and financial metrics. ")
 
 # SDG Analysis
 st.header("Analysis on SDG (Sustainable Development Goals) Performance")
@@ -94,8 +94,6 @@ plt.xlabel('Abiotic Resources', fontsize=14)
 plt.ylabel('Environmental Index', fontsize=14)
 plt.tight_layout()
 st.pyplot(fig4)
-
-st.header("Clustering")
 
 #New data visualization for company breakdown into causes:
 

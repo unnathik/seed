@@ -24,6 +24,21 @@ const pageTransition = {
     duration: 0.5
 };
 
+const parsePortfolio = (response) => {
+    try {
+        var parsedResponse = JSON.parse(response)
+        
+        return {
+            portfolio: parsedResponse.portfolio,
+            justification: parsedResponse.justification
+        }
+
+    } catch (error) {
+        console.error("Failed to parse portfolio:", error);
+        return null;
+    }
+};
+
 
 function Dashboard() {
     const [searchTerm, setSearchTerm] = useState('');
