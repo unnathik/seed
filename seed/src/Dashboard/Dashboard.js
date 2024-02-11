@@ -53,16 +53,33 @@ function Dashboard() {
     const [philosophy, setPhilosophy] = useState(null);
     
     const [selectedSDGs, setSelectedSDGs] = useState([]);
+    const [isRefreshing, setIsRefreshing] = useState(true);
 
     const handleSDGSelectionChange = (selectedIds) => {
         setSelectedSDGs(selectedIds);
     };
+
+
+    const fetchData = async () => {
+        setIsRefreshing(true);
+        // Simulate fetch call
+        await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate fetch delay
+        setIsRefreshing(false);
+      };
+    
+      useEffect(() => {
+        if (isRefreshing) {
+          fetchData();
+        }
+      }, [isRefreshing]);
+
 
     const handleCloseModal = () => {
         if (canCloseModal) {
             setModalOpen(false);
             setPastAmounts(prev => [...prev, amount]);
             //Fetch needed clusters
+            setIsRefreshing(true);
         }
     };  
 
@@ -201,7 +218,11 @@ function Dashboard() {
             variants={pageVariants}
             transition={pageTransition}
         >
-
+            {isRefreshing && (
+        <div className="overlay">
+          <div className="spinner"></div>
+        </div>
+      )}
             <Modal show={modalOpen}>
             <div className="flex flex-col items-left w-full relative overflow-hidden p-5">
                             <img
