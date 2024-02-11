@@ -109,6 +109,8 @@ function Dashboard() {
         setSelectedSDGs(selectedIds);
     };
 
+    const [mapping, setMapping] = useState({});
+
     const fetchData = async () => {
         setIsRefreshing(true);
         // Simulate fetch call
@@ -223,7 +225,7 @@ function Dashboard() {
                 const index = chartElement[0].index;
                 const label = pieData.labels[index];
                 const stockSymbol = label; // Assuming label is the stock symbol
-                const stockInfo = await fetchStockInfo(stockSymbol); // Fetch stock information
+                const stockInfo = mapping[stockSymbol]; // Fetch stock information
                 setHoverData(prev => {
                     if (stockInfo && stockInfo !== prev) {
                         return (
