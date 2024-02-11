@@ -109,7 +109,7 @@ export default function NavbarDefault() {
       {({ open }) => (
         <>
           <div className="mx-auto w-full px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-5 w-full">
+            <div className="flex justify-between items-center py-3 w-full">
               <div className="flex items-center">
                 <img className="h-16 w-auto rounded-2xl" src={seed} alt="Seed" />
                 <img className="h-8 w-auto pl-5" src={seed_text} alt="Seed" />
