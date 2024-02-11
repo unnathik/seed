@@ -75,7 +75,7 @@ function Dashboard() {
 
             setData(tickers)
             setPercentages(percentages)
-            prevObjects.push(portfolio)
+            prevObjects.push(a.portfolio)
             setPrevObjects(prevObjects)
             
             return {
@@ -495,7 +495,18 @@ function Dashboard() {
                                     </div>
                         </div>
                     </div>
-                <div className='flex flex-col h-full bg-black/[0.7] p-5 rounded-xl'></div>
+                <div className='flex flex-col h-full bg-black/[0.7] p-5 rounded-xl'>
+                    <h2>Portfolios</h2>
+                    
+                    {prevObjects && prevObjects.length > 0 && prevObjects.map((portfolioObj, index) => {
+                    const portfolioEntries = portfolioObj.map(({ ticker, percentage }) => 
+    `${ticker} at ${percentage}%`
+  ).join(', ');
+
+  // Return a formatted string for each portfolio directly
+  return <p key={index}>Portfolio {String.fromCharCode(65 + index)}: {portfolioEntries}</p>;
+})}
+                </div>
                 </div>
                 <div className='flex flex-col h-full w-1/4 overflow-auto ml-2'>
                     <NewsFeed />
