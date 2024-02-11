@@ -134,7 +134,7 @@ export default function NavbarDefault() {
                 <img className="h-16 w-auto rounded-2xl" src={seed} alt="Seed" />
                 <img className="h-8 w-auto pl-5" src={seed_text} alt="Seed" />
               </div>
-              <div className="relative" ref={searchInputRef}>
+              <div className="flex items-center" ref={searchInputRef}>
                 <div className="relative rounded-md shadow-sm w-full flex items-center">
                                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -160,6 +160,7 @@ export default function NavbarDefault() {
                       </div>                    
                     )}
               </div>
+              </div>
               <div className="flex items-center">
                 <div className="flex space-x-4">
                   {navigation.map((item) => (
@@ -170,7 +171,7 @@ export default function NavbarDefault() {
                 </div>
                 <img className="hidden sm:block h-16 w-16 rounded-full" src={avatar} alt="" />
               </div>
-            </div>
+          </div>
           </div>
         </>
       )}
