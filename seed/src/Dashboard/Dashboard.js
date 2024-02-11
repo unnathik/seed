@@ -110,6 +110,29 @@ function Dashboard() {
     };
 
     const [mapping, setMapping] = useState({});
+    const [ctx, setCtx] = useState('');
+    const [fetchingData, setFetchingData] = useState(false)
+
+    const followUpAPI = async (ctx) => {
+        console.log(ctx)
+
+        setFetchingData(true)
+        setIsRefreshing(true)
+
+        try {
+            const url = `http://127.0.0.1:5002/func?cntxt=` + ctx + `?new=false`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Network response was not ok');
+            
+            const data = await response.json();
+            parsePortfolio(data)
+            console.log("Fetched stock data:", data);
+        } catch(error) {
+            console.log("Error in API call: " + error)
+        }
+
+        setIsRefreshing(false);
+    }
 
     const fetchData = async () => {
         setIsRefreshing(true);
@@ -133,11 +156,14 @@ function Dashboard() {
         }
 
         setIsRefreshing(false);
+        setFetchingData(false);
       };
     
       useEffect(() => {
-        if (isRefreshing) {
+        if (!modalOpen && isRefreshing && data.length == 0) {
           fetchData();
+        } else if (!modalOpen && isRefreshing && !fetchingData) {
+            followUpAPI()
         }
       }, [isRefreshing]);
 
@@ -361,9 +387,9 @@ function Dashboard() {
                     </div>
                     <div className="flex justify-end">
                         <button 
-                            onClick={handleCloseModal} 
+                            type='submit'
+                            onClick={() => handleCloseModal()} 
                             disabled={!canCloseModal} 
-                            type="submit" 
                             className={`text-white text-sm py-3 px-8 rounded-full ${canCloseModal ? 'bg-[#050505] hover:bg-[#1C281E]/[0.5]' : 'bg-gray-500 text-gray-200'}`}
                         >
                             {canCloseModal ? 'Proceed' : 'Fill this out...'}
@@ -398,14 +424,25 @@ function Dashboard() {
 
                             {/* Text Input - Ensure it's at the bottom */}
                             <div className='w-full mt-auto'>
-                                <h2 className='text-lg font-md text-white mb-3'>What changes would you like?</h2>
+                                <form>
                                 <input
                                     type="text"
                                     value={textInput}
-                                    onChange={(e) => setTextInput(e.target.value)}
-                                    className="bg-white text-black text-sm rounded-md focus:ring-2 block w-full p-2 focus:outline-none focus:ring-black/[0.5]"
+                                    onChange={(e) => {
+                                        setTextInput(e.target.value)
+                                        
+                                    }}
+                                    className="bg-white text-black text-sm rounded-md focus:ring-2 block w-full p-3 focus:outline-none focus:ring-black/[0.5]"
                                     placeholder="Your investment philosophy or changes you'd like to make..."
                                 />
+                        <button 
+                            type='submit'
+                            onClick={(e) => {e.preventDefault(); followUpAPI(textInput); setTextInput("")}} 
+                            className={`'bg-[#050505] hover:bg-[#1C281E]/[0.5]' : 'bg-gray-500 text-gray-200'}`}
+                        >
+                            'Proceed' 
+                        </button>                                
+                        </form>
                     </div>
                     </div>
                 </div>
