@@ -29,7 +29,7 @@ function Dashboard() {
     const [canCloseModal, setCanCloseModal] = useState(false);
     
     const [experience, setExperience] = useState(0);
-    const [amount, setAmount] = useState(0);
+    const [amount, setAmount] = useState(null);
     const [philosophy, setPhilosophy] = useState(null);
     
     const [selectedSDGs, setSelectedSDGs] = useState([]);

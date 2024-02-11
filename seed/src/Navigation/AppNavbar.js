@@ -102,7 +102,7 @@ export default function NavbarDefault() {
                     <input
                       type="text"
                       placeholder="Search..."
-                      className="bg-white text-black text-sm rounded-md focus:ring-black/[0.5] block w-96 p-2"
+                      className="bg-white text-black text-sm rounded-md focus:ring-2 block w-96 p-2 focus:outline-none focus:ring-black/[0.5]"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
