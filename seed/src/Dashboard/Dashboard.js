@@ -75,6 +75,8 @@ function Dashboard() {
 
             setData(tickers)
             setPercentages(percentages)
+            prevObjects.push(portfolio)
+            setPrevObjects(prevObjects)
             
             return {
                 portfolio: parsedResponse.portfolio,
@@ -112,6 +114,29 @@ function Dashboard() {
     const [mapping, setMapping] = useState({});
     const [ctx, setCtx] = useState('');
     const [fetchingData, setFetchingData] = useState(false)
+    const [creatingNewPortfolio, setCreatingNewPortfolio] = useState(false)
+
+    const [prevObjects, setPrevObjects] = useState([])
+
+    const createNewPortfolio = async () => {
+        setIsRefreshing(true)
+        setCreatingNewPortfolio(true)
+
+        try {
+            const url = `http://127.0.0.1:5002/func`;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Network response was not ok');
+            
+            const data = await response.json();
+            parsePortfolio(data)
+            console.log("Fetched stock data:", data);
+        } catch(error) {
+            console.log("Error in API call: " + error)
+        }
+
+        setIsRefreshing(false)
+        setCreatingNewPortfolio(false)
+    }
 
     const followUpAPI = async (ctx) => {
         console.log(ctx)
@@ -132,6 +157,7 @@ function Dashboard() {
         }
 
         setIsRefreshing(false);
+        setFetchingData(false)
     }
 
     const fetchData = async () => {
@@ -164,7 +190,9 @@ function Dashboard() {
           fetchData();
         } else if (!modalOpen && isRefreshing && !fetchingData) {
             followUpAPI()
-        }
+        } else if (!modalOpen && isRefreshing && !creatingNewPortfolio) {
+            createNewPortfolio()
+        } 
       }, [isRefreshing]);
 
 
@@ -452,7 +480,7 @@ function Dashboard() {
                         <h2 className='text-lg font-md text-white '>Portfolio History</h2>
                         <div className='flex items-center justify-between mt-5 mb-5 w-full h-32'>
                             {/* Create Button */} 
-                            <button className='text-sm bg-[#00BF63] hover:opacity-[0.8] text-white font-md py-2 px-4 rounded-full w-1/3 mr-3' onClick={()=> {}}>
+                            <button onClick={() => createNewPortfolio()} className='text-sm bg-[#00BF63] hover:opacity-[0.8] text-white font-md py-2 px-4 rounded-full w-1/3 mr-3'>
                                 Create +
                             </button>
                             {/* Mini Chart Container */}
