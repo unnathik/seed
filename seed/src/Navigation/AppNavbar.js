@@ -149,7 +149,7 @@ export default function NavbarDefault() {
                                 </div>
                     <input
                       type="text"
-                      placeholder="Search..."
+                      placeholder="Search by ticker or company..."
                       className="pl-10 bg-white text-black text-sm rounded-md focus:ring-2 block w-96 p-2 focus:outline-none focus:ring-black/[0.5]"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
