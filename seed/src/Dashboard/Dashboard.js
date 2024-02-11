@@ -25,7 +25,7 @@ const pageTransition = {
 
 const parsePortfolio = (response) => {
     try {
-        parsedResponse = JSON.parse(response)
+        var parsedResponse = JSON.parse(response)
         
         return {
             portfolio: parsedResponse.portfolio,
