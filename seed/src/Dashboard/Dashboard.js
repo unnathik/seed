@@ -322,10 +322,9 @@ function Dashboard() {
                                 <input
                                     type="text"
                                     value={textInput}
-
                                     onChange={(e) => setTextInput(e.target.value)}
                                     className="bg-white text-black text-sm rounded-md focus:ring-2 block w-full p-2 focus:outline-none focus:ring-black/[0.5]"
-                                    placeholder="Type something..."
+                                    placeholder="Your investment philosophy or changes you'd like to make..."
                                 />
                     </div>
                     </div>
@@ -353,7 +352,7 @@ function Dashboard() {
                     </div>
                 <div className='flex flex-col h-full bg-black/[0.7] p-5 rounded-xl'></div>
                 </div>
-                <div className='flex flex-col h-full w-1/4 overflow-auto'>
+                <div className='flex flex-col h-full w-1/4 overflow-auto ml-2'>
                     <NewsFeed />
                 </div>
             </div>
