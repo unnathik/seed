@@ -3,9 +3,12 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
+from sklearn.decomposition import PCA
+
+st.set_option('deprecation.showPyplotGlobalUse', False)
 
 clean_environmental_dataset = '../data/cleaned_environmental_dataset_no_duplicates.csv'
-
 st.image("seed_logo.png", width=100)
 st.title("Seed: Socially Responsible Investing")
 st.write("Authors: Unnathi U Kumar, Adhira Choudhury, Abhishek Pillai, Neil Goyal")
@@ -192,3 +195,49 @@ st.pyplot(fig3)
 st.subheader("Retailers of Consumer Goods Related to Deforestation")
 fig4 = plot4(data_market_cap)
 st.pyplot(fig4)
+
+# Function to generate 2D PCA plot
+def plot_2d_pca(features_for_pca, cluster_labels):
+    pca_2d = PCA(n_components=2)
+    X_pca_2d = pca_2d.fit_transform(features_for_pca)
+
+    plt.figure(figsize=(10, 8))
+    plt.scatter(X_pca_2d[:, 0], X_pca_2d[:, 1], c=cluster_labels, cmap='viridis', marker='o', alpha=0.7, edgecolor='k')
+    plt.title('Clusters Visualized in PCA-Reduced 2D Space')
+    plt.xlabel('Principal Component 1')
+    plt.ylabel('Principal Component 2')
+    plt.colorbar(label='Cluster Label')
+    st.pyplot()
+
+# Function to generate 3D PCA plot
+def plot_3d_pca(features_for_pca, cluster_labels):
+    pca_3d = PCA(n_components=3)
+    X_pca_3d = pca_3d.fit_transform(features_for_pca)
+
+    fig = plt.figure(figsize=(12, 10))
+    ax = fig.add_subplot(111, projection='3d')
+
+    scatter = ax.scatter(X_pca_3d[:, 0], X_pca_3d[:, 1], X_pca_3d[:, 2], 
+                         c=cluster_labels, cmap='viridis', marker='o', alpha=0.7, edgecolor='k')
+
+    ax.set_title('Clusters Visualized in PCA-Reduced 3D Space')
+    ax.set_xlabel('Principal Component 1')
+    ax.set_ylabel('Principal Component 2')
+    ax.set_zlabel('Principal Component 3')
+
+    cbar = plt.colorbar(scatter, ax=ax, pad=0.1)
+    cbar.set_label('Cluster Label')
+
+    st.pyplot()
+
+st.title('Clustering Analysis with PCA Visualization')
+
+# Read data
+clean_df = pd.read_csv('../Clustering-Hierarcal/clusters_added_clean_data_revised.csv')
+features_for_pca = clean_df.drop(columns=['Cluster_Labels', 'Company_Name', 'Ticker', 'Company_Name_Encoded', 'Industry_Encoded'])
+cluster_labels = clean_df['Cluster_Labels']
+
+st.header('2D PCA Visualization')
+plot_2d_pca(features_for_pca, cluster_labels)
+st.header('3D PCA Visualization')
+plot_3d_pca(features_for_pca, cluster_labels)
