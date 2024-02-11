@@ -33,6 +33,8 @@ const fetchStockInfo = async (stockSymbol) => {
       '52WeekLow': data['52WeekLow'],
       esg: data.esg,
       es: data.es,
+      gs: data.gs,
+      ss: data.ss,
       beta: data.beta,
       dividendYield: data.dividendYield,
       peRatio: data.peRatio,
@@ -51,23 +53,7 @@ export default function NavbarDefault() {
   const [showHoverBox, setShowHoverBox] = useState(false);
   const [stockInfo, setStockInfo] = useState(null); // Initialize as null to properly handle conditional rendering
   const searchInputRef = useRef(null);
-  const hoverBoxRef = useRef(null);
   
-  useEffect(() => {
-    const checkIfClickedOutside = (e) => {
-      // If the hover box is open and the click is outside, close it
-      if (showHoverBox && hoverBoxRef.current && !hoverBoxRef.current.contains(e.target) && !searchInputRef.current.contains(e.target)) {
-        setShowHoverBox(false);
-      }
-    };
-
-    document.addEventListener('mousedown', checkIfClickedOutside);
-
-    return () => {
-      document.removeEventListener('mousedown', checkIfClickedOutside);
-    };
-  }, [showHoverBox]);
-
   useEffect(() => {
     const handleKeyDown = async (e) => {
       if (e.key === 'Enter') {
@@ -91,7 +77,27 @@ export default function NavbarDefault() {
   const chartOptions = {
     plugins: {
       legend: {
-        display: false // Adjust based on your preference
+        display: false, // Hides the legend
+      },
+      tooltip: {
+        callbacks: {
+          title: function(tooltipItems, data) {
+            // Assuming your labels are set up as 'Day 1', 'Day 2', etc.
+            // You can adjust this logic based on your actual labels setup
+            return tooltipItems[0].label;
+          },
+          label: function(context) {
+            let label = context.dataset.label || '';
+  
+            if (label) {
+              label += ': ';
+            }
+            if (context.parsed.y !== null) {
+              label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
+            }
+            return label;
+          }
+        }
       }
     },
     scales: {
@@ -99,17 +105,17 @@ export default function NavbarDefault() {
         ticks: {
           display: false,
         },
-        beginAtZero: false // Consider adjusting based on your data's expected range
+        beginAtZero: false
       },
       y: {
         ticks: {
           display: false,
         },
-        beginAtZero: false // Consider adjusting based on your data's expected range
+        beginAtZero: false
       }
     },
     maintainAspectRatio: false
-  };
+  };  
 
   const chartData = {
     labels: stockInfo?.chartData?.map((_, index) => `Day ${index + 1}`) || [],
@@ -149,15 +155,83 @@ export default function NavbarDefault() {
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     {showHoverBox && stockInfo && (
-                      <div className="absolute left-0 mt-2 w-96 bg-white rounded-md shadow-lg p-4 w-full">
-                        <h3 className="font-bold">{stockInfo.name} ({stockInfo.symbol})</h3>
-                        <p>{stockInfo.info}</p>
-                        <p>Recent Prices: {stockInfo.chartData.join(', ')}</p>
-                        {/* Chart rendering */}
-                        <div style={{ height: '300px', marginTop: '20px' }}>
-                          <Line data={chartData} options={chartOptions} />
+                      <div className="absolute left-0 mt-2 max-w-2xl bg-white rounded-md shadow-lg p-4" style={{left: '-50%', width: '800px', top: '100%'}}> {/* Adjusted width */}
+                        <button
+                          onClick={() => setShowHoverBox(false)}
+                          className="absolute top-0 right-0 mt-2 mr-2 text-lg font-semibold"
+                        >
+                          ×
+                        </button>
+                        {/* Company Name, Symbol, and Current Price, centered */}
+                        <div className="text-center font-bold text-lg">
+                          {stockInfo.name} ({stockInfo.symbol})
                         </div>
-                      </div>                    
+                        <div className="text-center">
+                          <div className="text-center text-xl font-semibold mt-2">
+                            Current Price: <span className="text-green-600">${stockInfo.currentPrice}</span>
+                          </div>
+                          <p>{stockInfo.name} is a U.S. Publicly Traded Company in the {stockInfo.sector} Sector.</p>
+                        </div>
+                      
+                        {/* Container for split view */}
+                        <div className="flex mt-4">
+                          {/* Left Side: Financial Information Table */}
+                          <div className="w-1/2 pr-2">
+                            <table className="w-full">
+                              <tbody>
+                                <tr>
+                                  <td className="px-2 py-1">Market Cap</td>
+                                  <td className="px-2 py-1 text-right">
+                                    {new Intl.NumberFormat('en-US').format(stockInfo.marketCap)}
+                                  </td>
+                                </tr>
+                                <tr>
+                                  <td className="px-2 py-1">52-Week High</td>
+                                  <td className="px-2 py-1 text-right">${stockInfo['52WeekHigh']}</td>
+                                </tr>
+                                <tr>
+                                  <td className="px-2 py-1">52-Week Low</td>
+                                  <td className="px-2 py-1 text-right">${stockInfo['52WeekLow']}</td>
+                                </tr>
+                                <tr>
+                                  <td className="px-2 py-1">Beta</td>
+                                  <td className="px-2 py-1 text-right">{stockInfo.beta}</td>
+                                </tr>
+                                <tr>
+                                  <td className="px-2 py-1">Dividend Yield</td>
+                                  <td className="px-2 py-1 text-right">{(stockInfo.dividendYield * 100).toFixed(2)}%</td>
+                                </tr>
+                                <tr>
+                                  <td className="px-2 py-1">P/E Ratio</td>
+                                  <td className="px-2 py-1 text-right">{stockInfo.peRatio.toFixed(2)}</td>
+                                </tr>
+                                <tr>
+                                  <td className="px-2 py-1">ESG Score</td>
+                                  <td className="px-2 py-1 text-right">{stockInfo.esg}</td>
+                                </tr>
+                                <tr>
+                                  <td className="px-2 py-1">Environmental Score</td>
+                                  <td className="px-2 py-1 text-right">{stockInfo.es}</td>
+                                </tr>
+                                <tr>
+                                  <td className="px-2 py-1">Social Score</td>
+                                  <td className="px-2 py-1 text-right">{stockInfo.ss}</td>
+                                </tr>
+                                <tr>
+                                  <td className="px-2 py-1">Governmental Score</td>
+                                  <td className="px-2 py-1 text-right">{stockInfo.gs}</td>
+                                </tr>
+                        
+                              </tbody>
+                            </table>
+                          </div>
+                      
+                          {/* Right Side: Line Chart */}
+                          <div className="w-1/2 pl-2" style={{ height: '350px' }}>
+                            <Line data={chartData} options={chartOptions} />
+                          </div>
+                        </div>
+                      </div>                                       
                     )}
               </div>
               </div>
