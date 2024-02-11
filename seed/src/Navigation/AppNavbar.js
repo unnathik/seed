@@ -51,7 +51,23 @@ export default function NavbarDefault() {
   const [showHoverBox, setShowHoverBox] = useState(false);
   const [stockInfo, setStockInfo] = useState(null); // Initialize as null to properly handle conditional rendering
   const searchInputRef = useRef(null);
+  const hoverBoxRef = useRef(null);
   
+  useEffect(() => {
+    const checkIfClickedOutside = (e) => {
+      // If the hover box is open and the click is outside, close it
+      if (showHoverBox && hoverBoxRef.current && !hoverBoxRef.current.contains(e.target) && !searchInputRef.current.contains(e.target)) {
+        setShowHoverBox(false);
+      }
+    };
+
+    document.addEventListener('mousedown', checkIfClickedOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', checkIfClickedOutside);
+    };
+  }, [showHoverBox]);
+
   useEffect(() => {
     const handleKeyDown = async (e) => {
       if (e.key === 'Enter') {
@@ -113,72 +129,30 @@ export default function NavbarDefault() {
       {({ open }) => (
         <>
           <div className="mx-auto w-full px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-5 w-full">
+            <div className="flex justify-between items-center py-3 w-full">
               <div className="flex items-center">
                 <img className="h-16 w-auto rounded-2xl" src={seed} alt="Seed" />
                 <img className="h-8 w-auto pl-5" src={seed_text} alt="Seed" />
               </div>
               <div className="relative" ref={searchInputRef}>
+                <div className="relative rounded-md shadow-sm w-full flex items-center">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                </svg>
+                                </div>
                     <input
                       type="text"
                       placeholder="Search..."
-                      className="bg-white text-black text-sm rounded-md focus:ring-black/[0.5] block w-96 p-2"
+                      className="pl-10 bg-white text-black text-sm rounded-md focus:ring-2 block w-96 p-2 focus:outline-none focus:ring-black/[0.5]"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     {showHoverBox && stockInfo && (
-                      <div className="absolute left-0 mt-2 w-96 bg-white rounded-md shadow-lg p-4">
-                        {/* Company Name and Symbol, centered and bold */}
-                        <div className="text-center font-bold text-lg">
-                          {stockInfo.name} ({stockInfo.symbol})
-                        </div>
-                      
-                        {/* Brief introduction */}
-                        <p className="text-center mt-2">{stockInfo.name} is a notable company in the {stockInfo.info} sector.</p>
-                      
-                        {/* Current Price, larger format */}
-                        <div className="text-center text-xl font-semibold mt-2">
-                          Current Price: <span className="text-green-600">${stockInfo.currentPrice}</span>
-                        </div>
-                      
-                        {/* Financial Information Table */}
-                        <table className="w-full mt-4">
-                          <tbody>
-                            <tr>
-                              <td className="px-2 py-1">Market Cap</td>
-                              <td className="px-2 py-1 text-right">{stockInfo.marketCap}</td>
-                            </tr>
-                            <tr>
-                              <td className="px-2 py-1">52-Week High</td>
-                              <td className="px-2 py-1 text-right">${stockInfo['52WeekHigh']}</td>
-                            </tr>
-                            <tr>
-                              <td className="px-2 py-1">52-Week Low</td>
-                              <td className="px-2 py-1 text-right">${stockInfo['52WeekLow']}</td>
-                            </tr>
-                            <tr>
-                              <td className="px-2 py-1">ESG Score</td>
-                              <td className="px-2 py-1 text-right">{stockInfo.esg}</td>
-                            </tr>
-                            <tr>
-                              <td className="px-2 py-1">Environmental Score</td>
-                              <td className="px-2 py-1 text-right">{stockInfo.es}</td>
-                            </tr>
-                            <tr>
-                              <td className="px-2 py-1">Beta</td>
-                              <td className="px-2 py-1 text-right">{stockInfo.beta}</td>
-                            </tr>
-                            <tr>
-                              <td className="px-2 py-1">Dividend Yield</td>
-                              <td className="px-2 py-1 text-right">{(stockInfo.dividendYield * 100).toFixed(2)}%</td>
-                            </tr>
-                            <tr>
-                              <td className="px-2 py-1">P/E Ratio</td>
-                              <td className="px-2 py-1 text-right">{stockInfo.peRatio.toFixed(2)}</td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      
+                      <div className="absolute left-0 mt-2 w-96 bg-white rounded-md shadow-lg p-4 w-full">
+                        <h3 className="font-bold">{stockInfo.name} ({stockInfo.symbol})</h3>
+                        <p>{stockInfo.info}</p>
+                        <p>Recent Prices: {stockInfo.chartData.join(', ')}</p>
                         {/* Chart rendering */}
                         <div style={{ height: '300px', marginTop: '20px' }}>
                           <Line data={chartData} options={chartOptions} />
