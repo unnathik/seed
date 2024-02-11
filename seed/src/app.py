@@ -6,9 +6,9 @@ import urllib.request
 import pandas as pd
 import json
 from bs4 import BeautifulSoup
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 import openai
-openai.api_key = "redacted"
+openai.api_key = "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"
 
 app = Flask(__name__)
 
@@ -22,6 +22,7 @@ CORS(app)
 
 
 @app.route('/stock', methods=['GET'])
+@cross_origin
 def get_stock_info():
     # Get ticker symbol from query parameter
     ticker_symbol = request.args.get('ticker', '').upper()
@@ -96,11 +97,14 @@ def get_stock_info():
 
 
 @app.route('/func', methods=['GET'])
+@cross_origin
 def runbackend():
     cntxt = request.args.get('cntxt', "I am interested in solar energy")
+    new = request.args.get('new', "true")
 
-    if cntxt == "new":
+    if new == "true":
         session.clear()
+
 
     if 'messages' not in session:
         session['messages'] = [
@@ -120,7 +124,32 @@ def runbackend():
             # Extracting and printing the AI's response
     ai_message = response.choices[0].message['content'].strip()
     session['messages'].append({"role": "system", "content": ai_message})
-    return jsonify({"response": ai_message})
+    try:
+        print(json.loads(ai_message))
+    except:
+        session.clear()
+        cntxt = "I am interested in solar energy"
+        if 'messages' not in session:
+            session['messages'] = [
+                {"role": "system", "content": "You are an AI assistant tasked with helping users build investment portfolios centered around responsible and sustainable companies. Your role is to analyze users' social goals and generate a tailored sample portfolio comprising 5 to 6 companies that align with those goals. The output must strictly adhere to the following format and guidelines:\n\n1. **Output Format**: Present the portfolio as JSON data. The JSON object should include an array of companies, where each company is represented as an object with two attributes: `ticker` (the company's stock ticker symbol) and `percentage` (the proportion of the portfolio allocated to this company, expressed as a percentage). \n\n2. **Justification**: After the list of companies, include a `justification` field within the JSON object. This field should contain a brief explanation detailing why each company was selected, emphasizing their alignment with the specified social goal.\n\n3. **Constraints**:\n   - The total percentage across all companies should sum to 100%.\n   - Only include company tickers and their respective portfolio percentages in the list of companies.\n   - Ensure the justification provides a clear connection between the companies chosen and the user's social goal.\n\n4. **Example Output Structure**:\n```json\n{\n  \"portfolio\": [\n    {\"ticker\": \"XXXX\", \"percentage\": 20},\n    {\"ticker\": \"YYYY\", \"percentage\": 20},\n    {\"ticker\": \"ZZZZ\", \"percentage\": 20},\n    {\"ticker\": \"AAAA\", \"percentage\": 20},\n    {\"ticker\": \"BBBB\", \"percentage\": 20}\n  ],\n  \"justification\": \"Each company selected for this portfolio focuses on [specific social goal], making them ideal for a responsible and sustainable investment strategy. [Brief explanation of each company's relevance].\"\n}\n```\n\nEnsure your response contains no additional text or data outside of this JSON structure. Your goal is to provide a concise, clear, and informative portfolio recommendation that aligns with the user's social objectives, formatted for easy integration and further analysis."}
+            ]
+
+        session['messages'].append({"role": "user", "content": cntxt})
+
+
+        response = openai.ChatCompletion.create(
+                model="gpt-4",
+                messages=session['messages'],
+                temperature=0.7,
+                max_tokens=300,
+        )
+                
+                # Extracting and printing the AI's response
+        ai_message = response.choices[0].message['content'].strip()
+        session['messages'].append({"role": "system", "content": ai_message})
+
+
+    return jsonify(ai_message)
 
 
 
