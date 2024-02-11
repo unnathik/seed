@@ -25,7 +25,7 @@ function Dashboard() {
     const [searchTerm, setSearchTerm] = useState('');
 
     //For initial Modal
-    const [modalOpen, setModalOpen] = useState(true);
+    const [modalOpen, setModalOpen] = useState(false);
     const [canCloseModal, setCanCloseModal] = useState(false);
     
     const [experience, setExperience] = useState(0);

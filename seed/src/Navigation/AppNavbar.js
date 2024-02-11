@@ -31,7 +31,23 @@ export default function NavbarDefault() {
   const [showHoverBox, setShowHoverBox] = useState(false);
   const [stockInfo, setStockInfo] = useState(null); // Initialize as null to properly handle conditional rendering
   const searchInputRef = useRef(null);
+  const hoverBoxRef = useRef(null);
   
+  useEffect(() => {
+    const checkIfClickedOutside = (e) => {
+      // If the hover box is open and the click is outside, close it
+      if (showHoverBox && hoverBoxRef.current && !hoverBoxRef.current.contains(e.target) && !searchInputRef.current.contains(e.target)) {
+        setShowHoverBox(false);
+      }
+    };
+
+    document.addEventListener('mousedown', checkIfClickedOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', checkIfClickedOutside);
+    };
+  }, [showHoverBox]);
+
   useEffect(() => {
     const handleKeyDown = async (e) => {
       if (e.key === 'Enter') {
@@ -107,7 +123,7 @@ export default function NavbarDefault() {
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     {showHoverBox && stockInfo && (
-                      <div className="absolute left-0 mt-2 w-96 bg-white rounded-md shadow-lg p-4 w-full">
+                      <div ref={hoverBoxRef} className="absolute left-0 mt-2 w-96 bg-white rounded-md shadow-lg p-4 w-full">
                         <h3 className="font-bold">{stockInfo.name} ({stockInfo.symbol})</h3>
                         <p>{stockInfo.info}</p>
                         <p>Recent Prices: {stockInfo.chartData.join(', ')}</p>
