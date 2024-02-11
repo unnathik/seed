@@ -9,6 +9,7 @@ import SDGSelector from './SDGSelector';
 import NewsFeed from './Newsfeed';
 import Chart from 'chart.js/auto';
 import { Line } from 'react-chartjs-2';
+import { Pie } from 'react-chartjs-2';
 
 
 const pageVariants = {
@@ -28,7 +29,7 @@ function Dashboard() {
     const [searchTerm, setSearchTerm] = useState('');
 
     //For initial Modal
-    const [modalOpen, setModalOpen] = useState(true);
+    const [modalOpen, setModalOpen] = useState(false);
     const [canCloseModal, setCanCloseModal] = useState(false);
     
     const [experience, setExperience] = useState(0);
@@ -89,6 +90,94 @@ function Dashboard() {
         const isEligibleToClose = amount >= 10 && experience > 0;
         setCanCloseModal(isEligibleToClose);
     }, [amount, experience]); 
+
+
+    //Given the Ticker Name Fetch the Industry
+    const fetchValueForLabel = (label) => {
+        const values = { 'AAPL': 'Industry: Tech', 'INTEL': 'Industry: Health', 'DELTA': 'Industry: Sample' };
+        return values[label] || 0;
+      };
+
+    const [hoverData, setHoverData] = useState('');
+    const [textInput, setTextInput] = useState('');
+    const [tooltipContent, setTooltipContent] = useState('');
+
+    const pieData = {
+        labels: ['AAPL', 'INTEL', 'DELTA'], //All ticker names
+        datasets: [
+            {
+                label: 'Current Portfolio',
+                data: [10, 49.5, 41.5],
+                backgroundColor: generateColorShadesForPie("hsl(119, 49%, 56%)", 3),
+                hoverOffset: 4,
+            },
+        ],
+    };
+
+    const pieOptions = {
+        plugins: {
+            legend: {
+                labels: {
+                    color: 'white', // Set legend text color to white
+                    // Add any additional label styling here
+                },
+                // Position and other legend configurations can also be adjusted here
+            },
+          tooltip: {
+            // Custom tooltip content
+            callbacks: {
+              beforeBody: (context) => {
+                // Fetch additional info based on the label of the hovered segment
+                const label = context[0].label;
+                const additionalInfo = fetchValueForLabel(label);
+                setTooltipContent(additionalInfo); // Update state to trigger re-render
+              },
+              afterBody: () => {
+                // Return the additional info for display in the tooltip
+                return tooltipContent;
+              }
+            }
+          },
+        },
+        interaction: {
+          intersect: true,
+          mode: 'point',
+        },
+        responsive: true,
+        maintainAspectRatio: true,
+        onHover: (event, chartElement) => {
+            if (chartElement.length) {
+                const index = chartElement[0].index;
+                const label = pieData.labels[index];
+                const value = pieData.datasets[0].data[index];
+                setHoverData(`Label: ${label}, Value: ${value}`);
+            } else {
+                setHoverData('');
+            }
+        },
+    };
+
+    function generateColorShadesForPie(initialColorHSL, n) {
+        // Parse the initial color HSL values
+        let [hue, saturation, lightness] = initialColorHSL.match(/\d+/g).map(Number);
+      
+        const colors = [initialColorHSL]; // Include the initial color in the array
+      
+        for (let i = 1; i < n; i++) {
+          // Adjust lightness and saturation for each new color
+          lightness = (lightness + 10) % 100;
+          saturation = (saturation + 5) % 100;
+      
+          // Ensure lightness stays within a visually appealing range
+          if (lightness > 90) lightness -= 30;
+          if (saturation < 30) saturation += 20;
+      
+          colors.push(`hsl(${hue}, ${saturation}%, ${lightness}%)`);
+        }
+      
+        return colors;
+      }
+
     return (
         <motion.div
             initial="initial"
@@ -184,13 +273,50 @@ function Dashboard() {
                 </div>
             </Modal>
 
+
+
+
+
+
+
+
         <div className="h-screen flex flex-col">
             {/* Navbar */}
             <div className="w-full">
                 <AppNavbar />
             </div>
             <div className='flex flex-row items-center justify-center h-full overflow-x-hidden p-4'>
-                <div className='flex flex-col h-full w-1/2 overflow-hidden'></div>
+                <div className='flex flex-col h-full w-1/2 p-2 justify-start rounded-xl'>
+                        {/* Pie Chart */}
+                        <div className='bg-[#142629] h-full w-full flex flex-col rounded-xl p-5 justify-start'>
+                        <h2 className='text-lg font-md text-white'>Curated Portfolio</h2>
+                        <div className='w-full h-1/2 flex items-center justify-center'>
+                                <Pie data={pieData} options={pieOptions} />
+                            </div>
+
+                            {/* Hover Info Box - Use remaining space more effectively */}
+                            <div className='flex-grow w-full my-3'>
+                                {hoverData && (
+                                    <div className='p-2 bg-gray-200 rounded-md h-full'>
+                                        {hoverData}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* Text Input - Ensure it's at the bottom */}
+                            <div className='w-full mt-auto'>
+                                <h2 className='text-lg font-md text-white mb-3'>What changes would you like?</h2>
+                                <input
+                                    type="text"
+                                    value={textInput}
+
+                                    onChange={(e) => setTextInput(e.target.value)}
+                                    className="bg-white text-black text-sm rounded-md focus:ring-2 block w-full p-2 focus:outline-none focus:ring-black/[0.5]"
+                                    placeholder="Type something..."
+                                />
+                    </div>
+                    </div>
+                </div>
                 <div className='flex flex-col h-full w-1/4 text-white p-2'>
                     {/* Portfolio History Header */}
                     <div className='mb-4 bg-black/[0.7] p-5 rounded-xl'>
@@ -212,7 +338,7 @@ function Dashboard() {
                                     </div>
                         </div>
                     </div>
-                <div className='flex flex-col h-full bg-black'></div>
+                <div className='flex flex-col h-full bg-black/[0.7] p-5 rounded-xl'></div>
                 </div>
                 <div className='flex flex-col h-full w-1/4 overflow-auto'>
                     <NewsFeed />

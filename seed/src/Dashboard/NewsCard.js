@@ -15,7 +15,7 @@ const NewsCard = ({ source, title, description, link, stock }) => {
         </p>
       </div>
       <div className="px-6 pb-4 flex items-center justify-between">
-        <button type="button" onClick={() => navigateLink(link)} className="text-white text-sm py-3 px-4 rounded-lg bg-[#050505] hover:bg-[#1C281E]/[0.8]">
+        <button type="button" onClick={() => navigateLink(link)} className="text-white text-sm py-3 px-4 rounded-lg bg-[#142629] hover:bg-[#142629]/[0.8]">
           Read More
         </button>
         <p onClick={() => setShowPopup(true)}>
