@@ -162,6 +162,7 @@ function Dashboard() {
             </div>
             </div>
         </div>
+        </div>
         </motion.div>
     );
 }
