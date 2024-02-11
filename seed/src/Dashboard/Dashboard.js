@@ -2,6 +2,7 @@ import React from 'react';
 import AppNavbar from '../Navigation/AppNavbar'; // Your Navbar component
 import { motion } from 'framer-motion';
 import { useState } from 'react';
+import NewsFeed from './Newsfeed';
 
 const pageVariants = {
     initial: { opacity: 0 },
@@ -27,22 +28,6 @@ function Dashboard() {
         }
     };
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     return (
         <motion.div
             initial="initial"
@@ -67,6 +52,7 @@ function Dashboard() {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />
+                <NewsFeed />
             </div>
             </div>
         </div>
