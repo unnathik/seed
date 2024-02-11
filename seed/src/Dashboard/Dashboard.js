@@ -10,7 +10,38 @@ import NewsFeed from './Newsfeed';
 import Chart from 'chart.js/auto';
 import { Line } from 'react-chartjs-2';
 import { Pie } from 'react-chartjs-2';
+import Popup from '../Popup/Popup.js';
 
+const fetchStockInfo = async (stockSymbol) => {
+    try {
+      const url = `http://127.0.0.1:5002/stock?ticker=${stockSymbol.toUpperCase()}`;
+      const response = await fetch(url);
+      if (!response.ok) throw new Error('Network response was not ok');
+      
+      const data = await response.json();
+      
+      return {
+        name: data.companyName,
+        symbol: data.symbol,
+        currentPrice: data.currentPrice,
+        marketCap: data.marketCap,
+        '52WeekHigh': data['52WeekHigh'],
+        '52WeekLow': data['52WeekLow'],
+        esg: data.esg,
+        es: data.es,
+        gs: data.gs,
+        ss: data.ss,
+        beta: data.beta,
+        dividendYield: data.dividendYield,
+        peRatio: data.peRatio,
+        chartData: [data.day0, data.day1, data.day2, data.day3, data.day4, data.day5],
+        sector: data.sector,
+      };
+    } catch (error) {
+      console.error("Failed to fetch stock info:", error);
+      return null;
+    }
+  };
 
 const pageVariants = {
     initial: { opacity: 0 },
@@ -127,7 +158,7 @@ function Dashboard() {
     const [textInput, setTextInput] = useState('');
 
     const pieData = {
-        labels: ['AAPL', 'INTEL', 'DELTA'], //All ticker names
+        labels: ['AAPL', 'INTC', 'DLA'], //All ticker names
         datasets: [
             {
                 label: 'Current Portfolio',
@@ -142,29 +173,47 @@ function Dashboard() {
         plugins: {
             legend: {
                 labels: {
-                    color: 'white', // Set legend text color to white
-                    // Add any additional label styling here
+                    color: 'white',
                 },
-                // Position and other legend configurations can also be adjusted here
             },
         },
         interaction: {
-          intersect: true,
-          mode: 'point',
+            intersect: true,
+            mode: 'point',
         },
         responsive: true,
         maintainAspectRatio: true,
-        onHover: (event, chartElement) => {
+        onHover: async (event, chartElement) => {
             if (chartElement.length) {
                 const index = chartElement[0].index;
                 const label = pieData.labels[index];
-                const value = pieData.datasets[0].data[index];
-                setHoverData(`Label: ${label}, Value: ${value}`);
+                const stockSymbol = label; // Assuming label is the stock symbol
+                const stockInfo = await fetchStockInfo(stockSymbol); // Fetch stock information
+                setHoverData(prev => {
+                    if (stockInfo && stockInfo !== prev) {
+                        return (
+                            <div className="">
+                                <div className="relative top-20 mx-auto shadow-lg rounded-md bg-white max-w-2xl p-4">
+                                    <div className="text-center font-bold text-lg">
+                                        {stockInfo.name} ({stockInfo.symbol})
+                                    </div>
+                                    <div className="text-center">
+                                        <div className="text-center text-xl font-semibold mt-2">
+                                            Current Price: <span className="text-green-600">${stockInfo.currentPrice}</span>
+                                        </div>
+                                        <p>{stockInfo.name} is a U.S. Publicly Traded Company in the {stockInfo.sector} Sector.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        );
+                    } else {
+                        return null;
+                    }
+                });
             } else {
-                setHoverData('');
+                setHoverData(null);
             }
-        },
-    };
+        }}
 
     function generateColorShadesForPie(initialColorHSL, n) {
         // Parse the initial color HSL values
@@ -287,12 +336,6 @@ function Dashboard() {
             </Modal>
 
 
-
-
-
-
-
-
         <div className="h-screen flex flex-col">
             {/* Navbar */}
             <div className="w-full">
@@ -308,7 +351,7 @@ function Dashboard() {
                             </div>
 
                             {/* Hover Info Box - Use remaining space more effectively */}
-                            <div className='flex-grow w-full my-3'>
+                            <div id='hover-data' className='flex-grow w-full my-3'>
                                 {hoverData && (
                                     <div className='p-2 bg-gray-200 rounded-md h-full'>
                                         {hoverData}
