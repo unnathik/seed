@@ -193,7 +193,7 @@ function Dashboard() {
                 <div className='flex flex-col h-full w-1/2 overflow-hidden'></div>
                 <div className='flex flex-col h-full w-1/4 text-white p-2'>
                     {/* Portfolio History Header */}
-                    <div className='mb-4 bg-black/[0.7] p-5 rounded-2xl'>
+                    <div className='mb-4 bg-black/[0.7] p-5 rounded-xl'>
                         <h2 className='text-lg font-md text-white '>Portfolio History</h2>
                         <div className='flex items-center justify-between mt-5 mb-5 w-full h-32'>
                             {/* Create Button */} 
