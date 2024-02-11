@@ -83,3 +83,112 @@ plt.tight_layout()
 st.pyplot(fig4)
 
 st.header("Clustering")
+
+#New data visualization for company breakdown into causes:
+
+file_path_market_cap = '../data/cleaned_market_cap_values.csv'
+data_market_cap = pd.read_csv(file_path_market_cap)
+
+def plot1(data_market_cap):
+    labels = ['Weapons Free Funds: Nuclear weapons screen',
+              'Weapons Free Funds: Military contractors screen',
+              'Gun Free Funds: Gun manufacturers screen',
+              'Gun Free Funds: Gun retailers screen']
+    label_counts = data_market_cap[labels].astype(bool).sum(axis=0)
+    counts = label_counts.values
+    bar_labels = ['Nuclear weapons screen', 'Military contractors screen', 'Gun manufacturers screen', 'Gun retailers screen']
+    bar_colors = ['tab:red', 'tab:blue', 'tab:green', 'tab:orange']
+
+    fig, ax = plt.subplots()
+    ax.bar(bar_labels, counts, color=bar_colors)
+    ax.set_ylabel('Number of Companies')
+    ax.set_title('Companies Providing Weapons & Military Support')
+    ax.set_xticklabels(bar_labels, rotation=45, ha='right')
+    return fig
+
+# Plot 2
+def plot2(data_market_cap):
+    labels = ['Fossil Free Funds: Coal screen',
+              'Fossil Free Funds: Oil / gas screen',
+              'Fossil Free Funds: Fossil-fired utility screen']
+    label_counts = data_market_cap[labels].astype(bool).sum(axis=0)
+    counts = label_counts.values
+    bar_labels = ['Coal screen', 'Oil / gas screen', 'Fossil-fired utility screen']
+    bar_colors = ['tab:red', 'tab:blue', 'tab:green']
+
+    fig, ax = plt.subplots()
+    ax.bar(bar_labels, counts, color=bar_colors)
+    ax.set_ylabel('Number of Companies')
+    ax.set_title('Companies with Dependencies on Non-Renewable Energy')
+    ax.set_xticklabels(bar_labels, rotation=45, ha='right')
+    return fig
+
+# Plot 3
+def plot3(data_market_cap):
+    labels = [
+        'Deforestation Free Funds: Producer screen',
+        'Deforestation Free Funds: Financier screen',
+        'Deforestation Free Funds: Consumer brand screen'
+    ]
+    label_counts = data_market_cap[labels].astype(bool).sum(axis=0)
+    counts = label_counts.values
+    bar_labels = ['Producer screen', 'Banks and lenders screen', 'Major consumer brands screen']
+    bar_colors = ['tab:red', 'tab:blue', 'tab:green']
+
+    fig, ax = plt.subplots()
+    ax.bar(bar_labels, counts, color=bar_colors)
+    ax.set_ylabel('Number of Companies')
+    ax.set_title('Companies with Deforestation Supporting Operations')
+    ax.set_xticklabels(bar_labels, rotation=45, ha='right')
+    return fig
+
+# Plot 4
+def plot4(data_market_cap):
+    labels = ['Deforestation Free Funds: Palm oil producer screen',
+              'Deforestation Free Funds: Palm oil consumer brand screen',
+              'Deforestation Free Funds: Paper / pulp producer screen',
+              'Deforestation Free Funds: Paper / pulp consumer brand screen',
+              'Deforestation Free Funds: Rubber producer screen',
+              'Deforestation Free Funds: Rubber consumer brand screen',
+              'Deforestation Free Funds: Timber producer screen',
+              'Deforestation Free Funds: Timber consumer brand screen',
+              'Deforestation Free Funds: Cattle producer screen',
+              'Deforestation Free Funds: Cattle consumer brand screen',
+              'Deforestation Free Funds: Soy producer screen',
+              'Deforestation Free Funds: Soy consumer brand screen']
+    label_counts = data_market_cap[labels].astype(bool).sum(axis=0)
+    counts = label_counts.values
+    bar_labels = ['Palm oil producer screen', 'Palm oil consumer brand screen', 'Paper / pulp producer screen', 
+                  'Paper / pulp consumer brand screen', 'Rubber producer screen', 'Rubber consumer brand screen', 
+                  'Timber producer screen', 'Timber consumer brand screen', 'Cattle producer screen', 
+                  'Cattle consumer brand screen', 'Soy producer screen', 'Soy consumer brand screen']
+
+    fig, ax = plt.subplots()
+    ax.bar(bar_labels, counts)
+    ax.set_ylabel('Number of Companies')
+    ax.set_title('Retailers of Consumer Goods Related to Deforestation')
+    ax.set_xticklabels(bar_labels, rotation=45, ha='right')
+    return fig
+
+# Load data
+clean_market_dataset = '../data/cleaned_market_cap_values.csv'
+data_market_cap = pd.read_csv(clean_market_dataset)
+
+# Display the plots in Streamlit
+st.header("Analysis of Companies with Ethical Concerns")
+
+st.subheader("Companies Providing Weapons & Military Support")
+fig1 = plot1(data_market_cap)
+st.pyplot(fig1)
+
+st.subheader("Companies with Dependencies on Non-Renewable Energy")
+fig2 = plot2(data_market_cap)
+st.pyplot(fig2)
+
+st.subheader("Companies with Deforestation Supporting Operations")
+fig3 = plot3(data_market_cap)
+st.pyplot(fig3)
+
+st.subheader("Retailers of Consumer Goods Related to Deforestation")
+fig4 = plot4(data_market_cap)
+st.pyplot(fig4)
