@@ -77,6 +77,7 @@ function Dashboard() {
             setPercentages(percentages)
             prevObjects.push(a.portfolio)
             setPrevObjects(prevObjects)
+            setJustification(a.justification)
             
             return {
                 portfolio: parsedResponse.portfolio,
@@ -452,15 +453,11 @@ function Dashboard() {
                         <div className='w-full h-1/2 flex items-center justify-center'>
                                 <Pie data={pieData} options={pieOptions} />
                             </div>
-                            <h2 className='text-lg font-md text-white'>Portfolio Analysis</h2>
+                            <h2 className='text-lg font-md text-white'>Portfolio Justification</h2>
                             {/* Hover Info Box - Use remaining space more effectively */}
-                            <div id='hover-data' className='w-full my-3'>
-                                {hoverData && (
-                                    <div className='p-2 bg-gray-200 rounded-md h-full'>
-                                        {hoverData}
-                                    </div>
-                                )}
-                            </div>
+                            <p>
+                                {justification}
+                            </p>
 
                             {/* Text Input - Ensure it's at the bottom */}
                             <div className='w-full mt-5 flex flex-row items-end h-full'>
