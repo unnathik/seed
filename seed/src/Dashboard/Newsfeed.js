@@ -8,9 +8,11 @@ const NewsFeed = () => {
       {newsData.map((newsItem, index) => (
         <NewsCard
           key={index}
+          source={newsItem.source}
           title={newsItem.title}
           description={newsItem.description}
           link={newsItem.link}
+          stock = {newsItem.stock}
         />
       ))}
     </div>
