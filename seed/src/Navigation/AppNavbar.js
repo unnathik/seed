@@ -115,14 +115,21 @@ export default function NavbarDefault() {
                 <img className="h-8 w-auto pl-5" src={seed_text} alt="Seed" />
               </div>
               <div className="relative" ref={searchInputRef}>
+                <div className="relative rounded-md shadow-sm w-full flex items-center">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                  <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                                </svg>
+                                </div>
                     <input
                       type="text"
                       placeholder="Search..."
-                      className="bg-white text-black text-sm rounded-md focus:ring-2 block w-96 p-2 focus:outline-none focus:ring-black/[0.5]"
+                      className="pl-10 bg-white text-black text-sm rounded-md focus:ring-2 block w-96 p-2 focus:outline-none focus:ring-black/[0.5]"
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
-                    {showHoverBox && stockInfo && (
+                </div>
+                  {showHoverBox && stockInfo && (
                       <div ref={hoverBoxRef} className="absolute left-0 mt-2 w-96 bg-white rounded-md shadow-lg p-4 w-full">
                         <h3 className="font-bold">{stockInfo.name} ({stockInfo.symbol})</h3>
                         <p>{stockInfo.info}</p>
