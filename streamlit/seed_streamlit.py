@@ -46,6 +46,7 @@ st.write('Some moderate correlations are also present in the heatmap. For exampl
 
 # Industry Analysis
 st.header("Industry Analysis")
+st.write("We plotted the environmental index in the most common industries (corresponding to more than 5 companies in our dataset) to find trends in environmental indices and assess distribution across sectors.")
 data['Industry (Exiobase)'] = data['Industry (Exiobase)'].str.replace('\(\d+\)', '', regex=True) \
                                                                  .str.replace('\d+', '', regex=True) \
                                                                  .str.strip()  # Remove leading/trailing spaces
@@ -69,7 +70,7 @@ plt.tight_layout()
 
 st.pyplot(fig2)
 st.image('company_legend.png')
-st.write("With respect to the environmental performance of different industries, we found that...")
+st.write("With respect to the environmental performance of different industries, we found that generally, companies in the air transport, construction, extraction of crude petroleum, and retail trade spaces have low environmental indices, whereas companies in the research and development and computer spaces have high environmental indices. On the other hand, there is considerable variance in environmental indices in fields like financial intermediation and chemicals. With that, this highlights the need for companies in certain spaces to identify gaps in their methodologies and employ sustainable remedies.")
 
 # Environmental Index vs. Environmental Factors
 st.header("Environmental Index vs. Environmental Factors")
