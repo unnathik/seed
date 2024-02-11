@@ -6,7 +6,7 @@ const NewsCard = ({ source, title, description, link, stock }) => {
   const [showPopup, setShowPopup] = useState(false);
 
   return (
-    <div className="max-w-sm rounded overflow-hidden shadow-lg m-2 bg-white">
+    <div className="w-full rounded overflow-hidden shadow-lg mb-2 mt-2 bg-white">
       <div className="px-6 py-4">
         <div className="font-semibold text-xs mb-2">{source}</div>
         <div className="font-weight-600 text-xl mb-2">{title}</div>
