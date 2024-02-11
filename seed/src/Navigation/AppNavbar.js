@@ -155,11 +155,10 @@ export default function NavbarDefault() {
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     {showHoverBox && stockInfo && (
-                      <div className="absolute left-0 mt-2 max-w-2xl bg-white rounded-md shadow-lg p-4" style={{left: '-50%', width: '800px', top: '100%'}}> {/* Adjusted width */}
-                        <button
-                          onClick={() => setShowHoverBox(false)}
-                          className="absolute top-0 right-0 mt-2 mr-2 text-lg font-semibold"
-                        >
+                      <div className="absolute left-0 mt-2 max-w-4xl bg-white rounded-md shadow-3xl p-4" 
+                            style={{left: '50%', transform: 'translateX(-50%)', width: '50vw', top: '100%'}}>
+                        <button onClick={() => setShowHoverBox(false)}
+                                className="absolute top-0 right-0 mt-2 mr-2 text-lg font-semibold">
                           ×
                         </button>
                         {/* Company Name, Symbol, and Current Price, centered */}
@@ -206,20 +205,20 @@ export default function NavbarDefault() {
                                   <td className="px-2 py-1 text-right">{stockInfo.peRatio.toFixed(2)}</td>
                                 </tr>
                                 <tr>
-                                  <td className="px-2 py-1">ESG Score</td>
-                                  <td className="px-2 py-1 text-right">{stockInfo.esg}</td>
+                                  <td className="px-2 py-1 font-semibold">ESG Score</td>
+                                  <td className="px-2 py-1 text-right text-green-600">{stockInfo.esg}</td>
                                 </tr>
                                 <tr>
-                                  <td className="px-2 py-1">Environmental Score</td>
-                                  <td className="px-2 py-1 text-right">{stockInfo.es}</td>
+                                  <td className="px-2 py-1 font-semibold">Environmental Score</td>
+                                  <td className="px-2 py-1 text-right text-green-600">{stockInfo.es}</td>
                                 </tr>
                                 <tr>
-                                  <td className="px-2 py-1">Social Score</td>
-                                  <td className="px-2 py-1 text-right">{stockInfo.ss}</td>
+                                  <td className="px-2 py-1 font-semibold">Social Score</td>
+                                  <td className="px-2 py-1 text-right text-green-600">{stockInfo.ss}</td>
                                 </tr>
                                 <tr>
-                                  <td className="px-2 py-1">Governmental Score</td>
-                                  <td className="px-2 py-1 text-right">{stockInfo.gs}</td>
+                                  <td className="px-2 py-1 font-semibold">Governmental Score</td>
+                                  <td className="px-2 py-1 text-right text-green-600">{stockInfo.gs}</td>
                                 </tr>
                         
                               </tbody>

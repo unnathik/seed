@@ -90,11 +90,21 @@ function Dashboard() {
         setSelectedSDGs(selectedIds);
     };
 
+    const [mapping, setMapping] = useState({});
 
     const fetchData = async () => {
         setIsRefreshing(true);
         // Simulate fetch call
         await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate fetch delay
+        
+        let temp = ['AAPL', 'INTC', 'DLA'];
+        let stockMapping = {}
+        setData(temp); //setting initial data
+        for(let i = 0;i<temp.length; i = i+1) {
+            let value = await fetchStockInfo(temp[i]);
+            stockMapping[temp[i]] = value;
+        }
+        setMapping(stockMapping);
         setIsRefreshing(false);
       };
     
@@ -156,6 +166,7 @@ function Dashboard() {
 
     const [hoverData, setHoverData] = useState('');
     const [textInput, setTextInput] = useState('');
+    const [data, setData] = useState([]);
 
     const pieData = {
         labels: ['AAPL', 'INTC', 'DLA'], //All ticker names
@@ -188,7 +199,7 @@ function Dashboard() {
                 const index = chartElement[0].index;
                 const label = pieData.labels[index];
                 const stockSymbol = label; // Assuming label is the stock symbol
-                const stockInfo = await fetchStockInfo(stockSymbol); // Fetch stock information
+                const stockInfo = mapping[stockSymbol]; // Fetch stock information
                 setHoverData(prev => {
                     if (stockInfo && stockInfo !== prev) {
                         return (
