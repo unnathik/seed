@@ -25,7 +25,7 @@ function Dashboard() {
     const [searchTerm, setSearchTerm] = useState('');
 
     //For initial Modal
-    const [modalOpen, setModalOpen] = useState(true);
+    const [modalOpen, setModalOpen] = useState(false);
     const [canCloseModal, setCanCloseModal] = useState(false);
     
     const [experience, setExperience] = useState(0);
@@ -146,22 +146,11 @@ function Dashboard() {
                 <AppNavbar />
             </div>
             <div className='flex flex-row items-center justify-center p-4 h-full'>
-            {/* Main content */}
-            <div className='flex flex-col h-full w-3/4 bg-transparent'></div>
-            <div className='flex flex-col h-full w-1/4 px-4'>
-                <input
-                    type="text"
-                    placeholder="Search..."
-                    className="bg-white text-black text-sm rounded-md focus:ring-black/[0.5] block w-full p-2 dark:bg-white dark:placeholder-gray-400 dark:text-black dark:focus:ring-black/[0.5] dark:focus:border-black focus:outline-none focus:ring-1" // Adjusted height and added padding, border, and shadow
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
             <div className='flex flex-col h-full w-3/4 bg-black'></div>
             <div className='flex flex-col h-full w-1/4 pl-4'>
                 <NewsFeed />
             </div>
             </div>
-        </div>
         </div>
         </motion.div>
     );
