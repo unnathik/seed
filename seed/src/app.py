@@ -1,7 +1,9 @@
 from flask import Flask, request, jsonify
 import yfinance as yf
 import requests
+import urllib.request
 import pandas as pd
+import json
 from bs4 import BeautifulSoup
 
 app = Flask(__name__)
@@ -11,7 +13,7 @@ app = Flask(__name__)
 def get_stock_info():
     # Get ticker symbol from query parameter
     ticker_symbol = request.args.get('ticker', '').upper()
-
+    url = "https://query2.finance.yahoo.com/v1/finance/esgChart?symbol=" + ticker_symbol
 
 # Parse the HTML content of the page
     
@@ -21,6 +23,12 @@ def get_stock_info():
     try:
         stock_info = stock.info
         hist = stock.history()
+        connection = urllib.request.urlopen(url)
+        data = connection.read()
+        data_2 = json.loads(data)
+        Formatdata = data_2["esgChart"]["result"][0]["symbolSeries"]
+        Formatdata_2 = pd.DataFrame(Formatdata)
+        print(Formatdata_2)
         # Extracting relevant fields
         relevant_info = {
             "symbol": stock_info.get("symbol"),
@@ -51,7 +59,11 @@ def get_stock_info():
             "day3": float(hist[-3:-2]['Close']),
             "day2": float(hist[-4:-3]['Close']),
             "day1": float(hist[-5:-4]['Close']),
-            "day0": float(hist[-6:-5]['Close'])
+            "day0": float(hist[-6:-5]['Close']),
+            "esg": float(Formatdata_2.iloc[-1]["esgScore"]),
+            "gs": float(Formatdata_2.iloc[-1]["governanceScore"]),
+            "es": float(Formatdata_2.iloc[-1]["environmentScore"]),
+            "ss": float(Formatdata_2.iloc[-1]["socialScore"])
         }
 
         return jsonify(relevant_info)
@@ -59,4 +71,4 @@ def get_stock_info():
         return jsonify({"error": "Stock information not found for the provided ticker symbol."}), 404
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5002, debug=True)
