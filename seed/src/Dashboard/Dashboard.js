@@ -11,6 +11,7 @@ import Chart from 'chart.js/auto';
 import { Line } from 'react-chartjs-2';
 import { Pie } from 'react-chartjs-2';
 import Popup from '../Popup/Popup.js';
+import sdgData from './sdgData.js';
 
 const fetchStockInfo = async (stockSymbol) => {
     try {
@@ -55,27 +56,45 @@ const pageTransition = {
     duration: 0.5
 };
 
-const parsePortfolio = (response) => {
-    try {
-        var parsedResponse = JSON.parse(response)
-        
-        return {
-            portfolio: parsedResponse.portfolio,
-            justification: parsedResponse.justification
-        }
-
-    } catch (error) {
-        console.error("Failed to parse portfolio:", error);
-        return null;
-    }
-};
-
-
 function Dashboard() {
+    const parsePortfolio = (response) => {
+        try {
+            var parsedResponse = JSON.parse(response)
+            let a = {
+                portfolio: parsedResponse.portfolio,
+                justification: parsedResponse.justification
+            }
+    
+            let tickers = []
+            let percentages = []
+    
+            a.portfolio.forEach((obj) => {
+                tickers.push(obj.ticker)
+                percentages.push(obj.percentage)
+            })
+
+            setData(tickers)
+            setPercentages(percentages)
+            
+            return {
+                portfolio: parsedResponse.portfolio,
+                justification: parsedResponse.justification
+            }
+    
+        } catch (error) {
+            console.error("Failed to parse portfolio:", error);
+            return null;
+        }
+    };
+
+    const [data, setData] = useState([])
+    const [percentages, setPercentages] = useState([])
+    const [justification, setJustification] = useState('')
+
     const [searchTerm, setSearchTerm] = useState('');
 
     //For initial Modal
-    const [modalOpen, setModalOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(true);
     const [canCloseModal, setCanCloseModal] = useState(false);
     
     const [experience, setExperience] = useState(0);
@@ -84,17 +103,33 @@ function Dashboard() {
     const [philosophy, setPhilosophy] = useState(null);
     
     const [selectedSDGs, setSelectedSDGs] = useState([]);
-    const [isRefreshing, setIsRefreshing] = useState(true);
+    const [isRefreshing, setIsRefreshing] = useState(false);
 
     const handleSDGSelectionChange = (selectedIds) => {
         setSelectedSDGs(selectedIds);
     };
 
-
     const fetchData = async () => {
         setIsRefreshing(true);
         // Simulate fetch call
-        await new Promise(resolve => setTimeout(resolve, 2000)); // Simulate fetch delay
+        try {
+            var sdgString = "";
+
+            selectedSDGs.map(idx => {
+                sdgString += sdgData[idx-1].name + ", "
+            })
+
+            const url = `http://127.0.0.1:5002/func?cntxt=` + sdgString + ". My investment philosophy is: (ignore if blank)" + philosophy;
+            const response = await fetch(url);
+            if (!response.ok) throw new Error('Network response was not ok');
+            
+            const data = await response.json();
+            parsePortfolio(data)
+            console.log("Fetched stock data:", data);
+        } catch(error) {
+            console.log("Error in API call: " + error)
+        }
+
         setIsRefreshing(false);
       };
     
@@ -158,12 +193,12 @@ function Dashboard() {
     const [textInput, setTextInput] = useState('');
 
     const pieData = {
-        labels: ['AAPL', 'INTC', 'DLA'], //All ticker names
+        labels: data, //All ticker names
         datasets: [
             {
                 label: 'Current Portfolio',
-                data: [10, 49.5, 41.5],
-                backgroundColor: generateColorShadesForPie("hsl(119, 49%, 56%)", 3),
+                data: percentages,
+                backgroundColor: generateColorShadesForPie("hsl(119, 49%, 56%)", data.length),
                 hoverOffset: 4,
             },
         ],

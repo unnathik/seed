@@ -97,7 +97,6 @@ def get_stock_info():
 
 
 @app.route('/func', methods=['GET'])
-@cross_origin
 def runbackend():
     cntxt = request.args.get('cntxt', "I am interested in solar energy")
     new = request.args.get('new', "true")
