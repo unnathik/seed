@@ -7,6 +7,9 @@ import leaves from '../art_assets/leaves.png';
 import icon from '../art_assets/seed_logo.png';
 import SDGSelector from './SDGSelector';
 import NewsFeed from './Newsfeed';
+import Chart from 'chart.js/auto';
+import { Line } from 'react-chartjs-2';
+
 
 const pageVariants = {
     initial: { opacity: 0 },
@@ -25,11 +28,12 @@ function Dashboard() {
     const [searchTerm, setSearchTerm] = useState('');
 
     //For initial Modal
-    const [modalOpen, setModalOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(true);
     const [canCloseModal, setCanCloseModal] = useState(false);
     
     const [experience, setExperience] = useState(0);
     const [amount, setAmount] = useState(null);
+    const [pastAmounts, setPastAmounts] = useState([0, 0]);
     const [philosophy, setPhilosophy] = useState(null);
     
     const [selectedSDGs, setSelectedSDGs] = useState([]);
@@ -41,9 +45,44 @@ function Dashboard() {
     const handleCloseModal = () => {
         if (canCloseModal) {
             setModalOpen(false);
+            setPastAmounts(prev => [...prev, amount]);
             //Fetch needed clusters
         }
+    };  
+
+    const chartOptions = {
+        plugins: {
+            legend: {
+                display: false, // Hide legend
+            },
+        },
+        elements: {
+            point: {
+                radius: 0, // Hide points on the line
+            },
+        },
+        scales: {
+            x: {
+                ticks: {
+                    color: 'white', // Set x-axis tick color to white
+                },
+                grid: {
+                    color: 'rgba(255, 255, 255, 0.1)', // Set x-axis grid line color to white with low opacity
+                }
+            },
+            y: {
+                ticks: {
+                    color: 'white', // Set y-axis tick color to white
+                },
+                grid: {
+                    color: 'rgba(255, 255, 255, 0.1)', // Set y-axis grid line color to white with low opacity
+                }
+            }
+        },
+        maintainAspectRatio: true,
+        responsive: true,
     };
+    
 
     useEffect(() => {
         // Update canCloseModal based on amount and experience conditions
@@ -95,7 +134,12 @@ function Dashboard() {
                                     </svg>
                                 </div>
                                 <input type="number" name="amount" min="0" placeholder="Enter Amount" required
-                                    onChange={(e) => setAmount(e.target.value)} value={amount}
+                                    onChange={(e) => {
+                                        const newAmount = parseFloat(e.target.value); // Convert string to float
+                                            if (!isNaN(newAmount)) { // Check if the conversion is successful
+                                              setAmount(newAmount);
+                                            }
+                                    }} value={amount}
                                     className="focus:ring-black/[0.5] block w-full pl-10 pr-4 py-2 bg-white text-black text-sm rounded-md focus:outline-none focus:ring-1 dark:bg-white dark:placeholder-gray-400 dark:text-black dark:focus:ring-black/[0.5] dark:focus:border-black" />
                             </div>
                         </div>
@@ -146,7 +190,30 @@ function Dashboard() {
                 <AppNavbar />
             </div>
             <div className='flex flex-row items-center justify-center h-full overflow-x-hidden p-4'>
-                <div className='flex flex-col h-full w-3/4 overflow-hidden'></div>
+                <div className='flex flex-col h-full w-1/2 overflow-hidden'></div>
+                <div className='flex flex-col h-full w-1/4 text-white p-2'>
+                    {/* Portfolio History Header */}
+                    <div className='mb-4 bg-black/[0.7] p-5 rounded-2xl'>
+                        <h2 className='text-lg font-md text-white '>Portfolio History</h2>
+                        <div className='flex items-center justify-between mt-5 mb-5 w-full h-32'>
+                            {/* Create Button */} 
+                            <button className='text-sm bg-[#00BF63] hover:opacity-[0.8] text-white font-md py-2 px-4 rounded-full w-1/3 mr-3' onClick={()=> {}}>
+                                Create +
+                            </button>
+                            {/* Mini Chart Container */}
+                                    <div className='w-2/3 h-full flex justify-center items-center p-3 rounded-xl'>
+                                    <Line
+                                        data={{
+                                            labels: pastAmounts,
+                                            datasets: [{ data: pastAmounts, fill: false, borderColor: "#00BF63" }],
+                                        }}
+                                        options={chartOptions}
+                                    />
+                                    </div>
+                        </div>
+                    </div>
+                <div className='flex flex-col h-full bg-black'></div>
+                </div>
                 <div className='flex flex-col h-full w-1/4 overflow-auto'>
                     <NewsFeed />
                 </div>
