@@ -155,7 +155,7 @@ export default function NavbarDefault() {
                       onChange={(e) => setSearchTerm(e.target.value)}
                     />
                     {showHoverBox && stockInfo && (
-                      <div className="absolute left-0 mt-2 max-w-4xl bg-white rounded-md shadow-3xl p-4" 
+                      <div className="absolute left-0 mt-2 max-w-4xl bg-white rounded-md shadow-lg p-4" 
                             style={{left: '50%', transform: 'translateX(-50%)', width: '50vw', top: '100%'}}>
                         <button onClick={() => setShowHoverBox(false)}
                                 className="absolute top-0 right-0 mt-2 mr-2 text-lg font-semibold">

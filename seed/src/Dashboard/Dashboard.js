@@ -96,7 +96,7 @@ function Dashboard() {
     const [searchTerm, setSearchTerm] = useState('');
 
     //For initial Modal
-    const [modalOpen, setModalOpen] = useState(true);
+    const [modalOpen, setModalOpen] = useState(false);
     const [canCloseModal, setCanCloseModal] = useState(false);
     
     const [experience, setExperience] = useState(0);
@@ -283,19 +283,31 @@ function Dashboard() {
                 setHoverData(prev => {
                     if (stockInfo && stockInfo !== prev) {
                         return (
-                            <div className="">
-                                <div className="relative top-20 mx-auto shadow-lg rounded-md bg-white max-w-2xl p-4">
-                                    <div className="text-center font-bold text-lg">
-                                        {stockInfo.name} ({stockInfo.symbol})
-                                    </div>
-                                    <div className="text-center">
-                                        <div className="text-center text-xl font-semibold mt-2">
-                                            Current Price: <span className="text-green-600">${stockInfo.currentPrice}</span>
-                                        </div>
-                                        <p>{stockInfo.name} is a U.S. Publicly Traded Company in the {stockInfo.sector} Sector.</p>
-                                    </div>
-                                </div>
-                            </div>
+                            <div className="mx-auto shadow-lg rounded-md bg-white w-full h-full flex flex-row p-2">
+    <div className='flex flex-row w-full justify-between'>
+        {/* Left Column for Name, Symbol, Current Price, and Sector */}
+        <div className='flex flex-col justify-start w-1/2'>
+            <div className="text-center font-bold text-md">
+                {stockInfo.name} ({stockInfo.symbol})
+            </div>
+            <div className="text-center">
+                <div className="text-sm font-semibold mt-2">
+                    Current Price: <span className="text-green-600">${stockInfo.currentPrice}</span>
+                </div>
+                <p className='text-sm'>{stockInfo.name} is a U.S. Publicly Traded Company in the {stockInfo.sector} Sector.</p>
+            </div>
+        </div>
+
+        {/* Right Column for ESG and other scores */}
+        <div className="flex flex-col justify-center items-center w-1/2">
+            <div className="font-semibold w-fit">ESG Score: <span className="text-green-600">{stockInfo.esg}</span></div>
+            <div className="font-semibold">Environmental Score: <span className="text-green-600">{stockInfo.es}</span></div>
+            <div className="font-semibold">Social Score: <span className="text-green-600">{stockInfo.ss}</span></div>
+            <div className="font-semibold">Governmental Score: <span className="text-green-600">{stockInfo.gs}</span></div>
+        </div>
+    </div>
+</div>
+                     
                         );
                     } else {
                         return null;
@@ -440,9 +452,9 @@ function Dashboard() {
                         <div className='w-full h-1/2 flex items-center justify-center'>
                                 <Pie data={pieData} options={pieOptions} />
                             </div>
-
+                            <h2 className='text-lg font-md text-white'>Portfolio Analysis</h2>
                             {/* Hover Info Box - Use remaining space more effectively */}
-                            <div id='hover-data' className='flex-grow w-full my-3'>
+                            <div id='hover-data' className='w-full my-3'>
                                 {hoverData && (
                                     <div className='p-2 bg-gray-200 rounded-md h-full'>
                                         {hoverData}
@@ -451,22 +463,23 @@ function Dashboard() {
                             </div>
 
                             {/* Text Input - Ensure it's at the bottom */}
-                            <div className='w-full mt-auto'>
-                                <form>
+                            <div className='w-full mt-5 flex flex-row items-center'>
+                            <form className="w-full flex h-full">
                                 <input
                                     type="text"
                                     value={textInput}
-                                    onChange={(e) => {
-                                        setTextInput(e.target.value)
-                                        
-                                    }}
-                                    className="bg-white text-black text-sm rounded-md focus:ring-2 block w-full p-3 focus:outline-none focus:ring-black/[0.5]"
+                                    onChange={(e) => setTextInput(e.target.value)}
+                                    className="bg-white text-black text-sm rounded-md focus:ring-2 block w-3/4 p-3 focus:outline-none focus:ring-black/[0.5]"
                                     placeholder="Your investment philosophy or changes you'd like to make..."
                                 />
-                        <button 
-                            type='submit'
-                            onClick={(e) => {e.preventDefault(); followUpAPI(textInput); setTextInput("")}} 
-                            className={`'bg-[#050505] hover:bg-[#1C281E]/[0.5]' : 'bg-gray-500 text-gray-200'}`}
+                                <button 
+                                    type='submit'
+                                    onClick={(e) => {
+                                        e.preventDefault(); 
+                                        followUpAPI(textInput); 
+                                        setTextInput("");
+                                    }} 
+                            className='text-sm bg-[#00BF63] hover:opacity-[0.8] text-white font-md py-2 px-4 rounded-full w-1/4 ml-5'
                         >
                             'Proceed' 
                         </button>                                
