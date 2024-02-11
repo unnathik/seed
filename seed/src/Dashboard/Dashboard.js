@@ -123,16 +123,8 @@ function Dashboard() {
         setCanCloseModal(isEligibleToClose);
     }, [amount, experience]); 
 
-
-    //Given the Ticker Name Fetch the Industry
-    const fetchValueForLabel = (label) => {
-        const values = { 'AAPL': 'Industry: Tech', 'INTEL': 'Industry: Health', 'DELTA': 'Industry: Sample' };
-        return values[label] || 0;
-      };
-
     const [hoverData, setHoverData] = useState('');
     const [textInput, setTextInput] = useState('');
-    const [tooltipContent, setTooltipContent] = useState('');
 
     const pieData = {
         labels: ['AAPL', 'INTEL', 'DELTA'], //All ticker names
@@ -155,21 +147,6 @@ function Dashboard() {
                 },
                 // Position and other legend configurations can also be adjusted here
             },
-          tooltip: {
-            // Custom tooltip content
-            callbacks: {
-              beforeBody: (context) => {
-                // Fetch additional info based on the label of the hovered segment
-                const label = context[0].label;
-                const additionalInfo = fetchValueForLabel(label);
-                setTooltipContent(additionalInfo); // Update state to trigger re-render
-              },
-              afterBody: () => {
-                // Return the additional info for display in the tooltip
-                return tooltipContent;
-              }
-            }
-          },
         },
         interaction: {
           intersect: true,
