@@ -453,9 +453,9 @@ function Dashboard() {
                         <div className='w-full h-1/2 flex items-center justify-center'>
                                 <Pie data={pieData} options={pieOptions} />
                             </div>
-                            <h2 className='text-lg font-md text-white'>Portfolio Justification</h2>
+                            <h2 className='text-lg font-md text-white mb-5'>Portfolio Justification</h2>
                             {/* Hover Info Box - Use remaining space more effectively */}
-                            <p>
+                            <p className='text-white text-md'>
                                 {justification}
                             </p>
 
@@ -478,7 +478,7 @@ function Dashboard() {
                                     }} 
                             className='text-sm bg-[#00BF63] hover:opacity-[0.8] text-white font-md py-2 px-4 rounded-full w-1/4 ml-5 h-11' 
                         >
-                            'Proceed'
+                            Process
                         </button>                                
                         </form>
                     </div>
@@ -506,7 +506,7 @@ function Dashboard() {
                         </div>
                     </div>
                 <div className='flex flex-col h-full bg-black/[0.7] p-5 rounded-xl'>
-                    <h2>Portfolios</h2>
+                    <h2 className='mb-5'>Portfolios</h2>
                     
                     {prevObjects && prevObjects.length > 0 && prevObjects.map((portfolioObj, index) => {
                     const portfolioEntries = portfolioObj.map(({ ticker, percentage }) => 
@@ -514,7 +514,7 @@ function Dashboard() {
   ).join(', ');
 
   // Return a formatted string for each portfolio directly
-  return <p key={index}>Portfolio {String.fromCharCode(65 + index)}: {portfolioEntries}</p>;
+  return <p key={index} className='mb-5'><span className='font-semibold'>Portfolio</span> {String.fromCharCode(65 + index)}: <br></br>{portfolioEntries}</p>;
 })}
                 </div>
                 </div>
