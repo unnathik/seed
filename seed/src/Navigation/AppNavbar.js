@@ -199,27 +199,27 @@ export default function NavbarDefault() {
                                 </tr>
                                 <tr>
                                   <td className="px-2 py-1">Dividend Yield</td>
-                                  <td className="px-2 py-1 text-right">{(stockInfo.dividendYield * 100).toFixed(2)}%</td>
+                                  <td className="px-2 py-1 text-right">{stockInfo.dividendYield == null ? "N/A" : (stockInfo.dividendYield * 100).toFixed(2) + "%"}</td>
                                 </tr>
                                 <tr>
                                   <td className="px-2 py-1">P/E Ratio</td>
-                                  <td className="px-2 py-1 text-right">{stockInfo.peRatio.toFixed(2)}</td>
+                                  <td className="px-2 py-1 text-right">{stockInfo.peRatio == null ? "N/A" : stockInfo.peRatio.toFixed(2)}</td>
                                 </tr>
                                 <tr>
                                   <td className="px-2 py-1">ESG Score</td>
-                                  <td className="px-2 py-1 text-right">{stockInfo.esg}</td>
+                                  <td className="px-2 py-1 text-right">{stockInfo.esg == 0 ? "N/A" : stockInfo.esg}</td>
                                 </tr>
                                 <tr>
                                   <td className="px-2 py-1">Environmental Score</td>
-                                  <td className="px-2 py-1 text-right">{stockInfo.es}</td>
+                                  <td className="px-2 py-1 text-right">{stockInfo.es == 0 ? "N/A" : stockInfo.es}</td>
                                 </tr>
                                 <tr>
                                   <td className="px-2 py-1">Social Score</td>
-                                  <td className="px-2 py-1 text-right">{stockInfo.ss}</td>
+                                  <td className="px-2 py-1 text-right">{stockInfo.ss == 0 ? "N/A" : stockInfo.ss}</td>
                                 </tr>
                                 <tr>
                                   <td className="px-2 py-1">Governmental Score</td>
-                                  <td className="px-2 py-1 text-right">{stockInfo.gs}</td>
+                                  <td className="px-2 py-1 text-right">{stockInfo.gs == 0 ? "N/A" : stockInfo.gs}</td>
                                 </tr>
                         
                               </tbody>
