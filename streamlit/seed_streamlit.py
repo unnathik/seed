@@ -10,12 +10,9 @@ st.set_option('deprecation.showPyplotGlobalUse', False)
 
 clean_environmental_dataset = '../data/cleaned_environmental_dataset_no_duplicates.csv'
 st.image("seed_logo.png", width=100)
-st.title("Seed: Socially Responsible Investing")
+st.title("Seed: Returns Meet Responsibility")
 st.write("Authors: Unnathi Kumar, Adhira Choudhury, Abhishek Pillai, Neil Goyal")
 st.write("")
-
-st.header("Introduction")
-st.write("[TODO: add details]")
 
 st.header("More About Our Dataset")
 st.write("We used the [HBS Corporate Environmental Impact dataset](https://opennetzero.org/dataset/iwa-corporate-environmental-impact-data-supplement) and the [As You Sow Invest Your Values Company Screen dataset](https://www.asyousow.org/) in our study.")

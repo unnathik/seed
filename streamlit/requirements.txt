@@ -4,3 +4,4 @@ numpy
 streamlit
 seaborn
 openpyxl
+scikit-learn

@@ -8,18 +8,17 @@ import json
 from bs4 import BeautifulSoup
 from flask_cors import CORS, cross_origin
 import openai
-openai.api_key = "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"
+openai.api_key = ""
 
 app = Flask(__name__)
 
-app.config["SECRET_KEY"] = "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"  # Change this to a random secret key
+app.config["SECRET_KEY"] = ""  # Change this to a random secret key
 app.config["SESSION_TYPE"] = "filesystem"  # Can be "redis", "memcached", "filesystem", etc.
 Session(app)
 
 
 
 CORS(app)
-
 
 @app.route('/stock', methods=['GET'])
 def get_stock_info():
@@ -94,7 +93,7 @@ def get_stock_info():
 
     return jsonify(relevant_info)
 
-
+@cross_origin
 @app.route('/func', methods=['GET'])
 def runbackend():
     cntxt = request.args.get('cntxt', "I am interested in solar energy")
