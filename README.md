@@ -1,4 +1,4 @@
-# The problem Seed solves
+# Seed
 In today's investment landscape, the glaring gap between traditional investing strategies and socially driven investing decisions is stark, failing to meet the demands of 89% of investors aiming to prioritize Environmental, Social, and Governance (ESG) factors. This discrepancy underscores the critical need for a platform that aligns investment strategies with investors' ethical values and impact goals, while also tackling the widespread issues of transparency and authenticity in socially responsible investing. This discrepancy also allows companies to treat CSR as "hypocritical window dressing", highlighting the need for platforms that bring light to whether companies are fulfilling their social obligations to society.
 
 Seed revolutionizes investing by bridging these gaps and enabling investors to make informed, impactful, and ethical choices.
